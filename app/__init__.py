@@ -25,8 +25,8 @@ def create_app() -> FastAPI:
     analysis_service = AnalysisService()
 
     # Монтируем статические файлы
-    app.mount("/static", StaticFiles(directory="static"), name="static")
-    templates = Jinja2Templates(directory="templates")
+    app.mount("/static", StaticFiles(directory="app/static"), name="static")
+    templates = Jinja2Templates(directory="app/templates")
 
     @app.get("/", response_class=HTMLResponse)
     async def root(request: Request):
@@ -118,12 +118,6 @@ def create_app() -> FastAPI:
             chunk = []
             total = 0
 
-            # Используем ijson для потокового парсинга ключа "file_activity", который должен быть массивом.
-            # Это означает, что структура JSON должна быть примерно такой:
-            # {
-            #     "file_activity": [ {...}, {...}, ... ],
-            #     "docker_output": "..."
-            # }
             with open(results_file, "r", encoding="utf-8") as f:
                 parser = ijson.items(f, "file_activity.item")
                 for item in parser:

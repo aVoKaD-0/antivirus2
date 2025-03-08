@@ -2,39 +2,46 @@ import json
 import os
 import requests
 import logging
+from loguru import logger
 from app.repositories.file_repository import FileRepository
 
 
 class Logger:
-    def log(message):
-        logging.basicConfig(filename="data/log.log")
-        logging.info(msg=message)
+    # Добавляем лог в файл только один раз при старте
+    logger.add("app/logs/GlobalLog.log", level="INFO", rotation="10 MB")
 
+    @staticmethod
+    def log(message):
+        logger.info(message)
+
+    @staticmethod
     def analysis_log(msg, analysis_id):
-        results_data = FileRepository.load_results(analysis_id)
-        results_data["docker_output"] += msg + ";   "
+        results_data = FileRepository.get_result_data(analysis_id)
+        results_data["docker_output"] += msg
         FileRepository.save_results(results_data, analysis_id)
 
+    @staticmethod
     def update_history_on_error(analysis_id, error_message):
-        history_file = "history/history.json"
+        history_file = "app/logs/history.json"
         if not os.path.exists(history_file):
             history = []
         else:
             with open(history_file, "r") as file:
                 history = json.load(file)
-        
+
         for entry in history:
             if entry["analysis_id"] == analysis_id:
                 entry["status"] = "error"
                 entry["file_activity"] = []
                 entry["docker_output"] = error_message
                 break
-        
+
         with open(history_file, "w") as file:
             json.dump(history, file, indent=4)
 
-    def send_result_to_server(analysis_id, result_data, success: bool):
-        url = "http://localhost:8080/submit-result/"
+    @staticmethod
+    def send_result_to_server(analysis_id, result_data):
+        url = "http://192.168.31.153:8080/submit-result/"
         
         payload = {
             "analysis_id": analysis_id,
@@ -43,10 +50,10 @@ class Logger:
         headers = {"Content-Type": "application/json"}
         
         try:
-            response = requests.post(url, data=json.dumps(payload), headers=headers)
+            response = requests.post(url, json=payload, headers=headers)
             if response.status_code == 200:
-                Logger.log(f"Результаты отправлены на сервер", analysis_id)
+                Logger.log(f"[{analysis_id}] ✅ Результаты отправлены на сервер")
             else:
-                Logger.log(f"Ошибка при отправке результатов: {response.status_code}", analysis_id)
+                Logger.log(f"[{analysis_id}] ❌ Ошибка при отправке: {response.status_code}")
         except Exception as e:
-            Logger.log(f"Ошибка при отправке результатов: {str(e)}", analysis_id)
+            Logger.log(f"[{analysis_id}] ⚠️ Ошибка соединения: {str(e)}")

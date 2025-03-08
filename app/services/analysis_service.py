@@ -21,8 +21,8 @@ class AnalysisService:
             Logger.analysis_log(f"Импорт виртуальной машины с новым именем {analysis_id}", analysis_id)
             os.path.join(project_dir, "Hyper", analysis_id, "Virtual Hard Disks")
             import_vm_command = f"""
-            $vm = Import-VM -Path "{project_dir}\\Hyper\\ExportedVM\\dock2\\dock\\Virtual Machines\powershell\DBC8697E-E08F-48FB-9E7A-60FCFC763752.vmcx" -Copy -GenerateNewId -VirtualMachinePath "{project_dir}\\Hyper\\{analysis_id}" -VhdDestinationPath "{project_dir}\\Hyper\\{analysis_id}\\Virtual Machines";
-            Rename-VM -VM $vm -NewName "{analysis_id}";
+            $vm = Import-VM -Path "{project_dir}\\Hyper\\ExportedVM\\dock2\\dock\\Virtual Machines\powershell\DBC8697E-E08F-48FB-9E7A-60FCFC763752.vmcx" -Copy -GenerateNewId -VirtualMachinePath "{project_dir}\\Hyper\\{analysis_id}" -VhdDestinationPath "{project_dir}\\Hyper\\{analysis_id}\\Virtual Machines"
+            Rename-VM -VM $vm -NewName "{analysis_id}"
             """
             subprocess.run(["powershell", "-Command", import_vm_command], check=True)
             Logger.analysis_log(f"Виртуальная машина импортирована как {analysis_id}.", analysis_id)

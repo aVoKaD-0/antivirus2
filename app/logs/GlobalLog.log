@@ -1,0 +1,6 @@
+2025-03-09 01:07:58.806 | INFO     | app.utils.logging:log:15 - SSE endpoint called
+2025-03-09 01:07:58.815 | INFO     | app.utils.logging:log:15 - Event generator started
+2025-03-09 01:08:49.412 | INFO     | app.utils.logging:log:15 - Event generator finished
+2025-03-09 01:09:03.524 | INFO     | app.utils.logging:log:15 - SSE endpoint called
+2025-03-09 01:09:03.532 | INFO     | app.utils.logging:log:15 - Event generator started
+2025-03-09 01:14:58.657 | INFO     | app.utils.logging:log:15 - Event generator finished

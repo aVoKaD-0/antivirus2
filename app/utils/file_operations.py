@@ -29,14 +29,14 @@ class FileOperations:
         return str(uuid.uuid4())
     
     def load_user_history():
-        history_file = "history/history.json"
+        history_file = "app/logs/history.json"
         if os.path.exists(history_file):
             with open(history_file, "r", encoding="utf-8-sig") as file:
                 return json.load(file)
         return []
 
     def save_user_history(history: list):
-        history_dir = "history"
+        history_dir = "app/logs"
         os.makedirs(history_dir, exist_ok=True)
         history_file = os.path.join(history_dir, "history.json")
         with open(history_file, "w") as file:
@@ -51,10 +51,6 @@ class FileOperations:
     
     def get_result_data(analysis_id: str) -> dict:
         results_file = os.path.join("results", analysis_id, "results.json")
-        # Logger.log(f"[DEBUG] Ищем файл результатов: {results_file}")
-        # if not os.path.exists(results_file):
-        #      raise ValueError(f"[DEBUG] Результаты не найдены: {results_file}")
-
         preview = []
         total = 0
         # Читаем только массив file_activity через ijson, чтобы избежать загрузки полного файла в память
@@ -64,7 +60,6 @@ class FileOperations:
                 if total < 100:
                     preview.append(item)
                 total += 1
-        # Logger.log(f"[DEBUG] file_activity: получено {len(preview)} элементов из {total}")
 
         docker_output = ""
         # Если docker_output находится в конце файла, читаем последние 100 КБ
@@ -84,7 +79,6 @@ class FileOperations:
             "docker_output": docker_output,
             "total": total
         }
-        # Logger.log(f"[DEBUG] Отправляем данные")
         return result
     
     def delete_vm(analysis_id):
@@ -146,7 +140,7 @@ class FileOperations:
 
             Logger.global_log("Сохраняем результаты в файл...", analysis_id)
 
-            results_data = FileOperations.load_results(analysis_id)
+            results_data = FileOperations.get_result_data(analysis_id)
 
             results_data["file_activity"] = activity
 
