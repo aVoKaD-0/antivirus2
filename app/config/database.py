@@ -22,7 +22,7 @@ async def main():
     db = AsyncPostgresDB("postgresql://almaz:almaz@localhost/5432")
     await db.connect()
 
-    # await db.execute("INSERT INTO users (name, age) VALUES ($1, $2)", ("Charlie", 22))
+    await db.execute("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username VARCHAR(255), password VARCHAR(255))")
     users = await db.execute("SELECT * FROM users", fetch=True)
     print(users)
 

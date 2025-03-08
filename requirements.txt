@@ -1,4 +1,6 @@
 asyncpg
+alembic
+crud
 fastapi
 uvicorn
 pydantic
