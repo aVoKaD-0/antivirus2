@@ -4,14 +4,15 @@ from urllib.parse import quote_plus
 from db.models import Users, Analysis, Results
 
 
-username = "postgres"
-password = "postgres"
-host = "localhost"
-port = "5432"
-dbname = "antivirus"
+class PostgresDB():
+    username = "postgres"
+    password = "postgres"
+    host = "localhost"
+    port = "5432"
+    dbname = "antivirus"
 
-dsn = f"postgresql://{quote_plus(username)}:{quote_plus(password)}@{host}/{dbname}"
-db = Database(dsn)
+    dsn = f"postgresql://{quote_plus(username)}:{quote_plus(password)}@{host}/{dbname}"
+    db = Database(dsn)
 
-# Создание всех таблиц
-Base.metadata.create_all(db.engine)
+    # Создание всех таблиц
+    Base.metadata.create_all(db.engine)

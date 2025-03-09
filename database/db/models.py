@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, JSON, Index
+from sqlalchemy import Column, Integer, String, VARCHAR
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from db.schemas import Base 
@@ -9,7 +9,7 @@ class Users(Base):
 
     username = Column(String, unique=True, index=True)
     email = Column(String, primary_key=True, unique=True, index=True)
-    hashed_password = Column(String, index=True)
+    hashed_password = Column(VARCHAR(255), index=True)
 
     items = relationship("Item", back_populates="owner")
 
