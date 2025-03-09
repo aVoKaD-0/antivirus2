@@ -13,9 +13,9 @@ from fastapi import APIRouter, UploadFile, File, Request, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from app.schemas import main
+from app.schemas import analysis
 
-AnalysisResult = main.AnalysisResult
+AnalysisResult = analysis.AnalysisResult
 
 
 router = APIRouter(prefix="/main", tags=["main"])

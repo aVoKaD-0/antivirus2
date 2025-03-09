@@ -1,10 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
-# from services.user_service import UserService
+from services.user_service import UserService
 # from repositories.user_repository import UserRepository
 from app.domain.models.database import User
 from app.schemas import user as user_schema
+from app.schemas.user import SignUpRequest
 
 UserResponse = user_schema.UserResponse
 UserCreate = user_schema.UserCreate
@@ -18,10 +19,10 @@ async def get_db():
 
 # Эндпоинт для создания пользователя
 @router.post("/", response_model=UserResponse)
-async def create_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
-    # user_service = UserService(db)
-    # created_user = await user_service.create_user(user.username, user.email, user.hashed_password)
-    # return created_user
+async def SignUp(user: SignUpRequest, db: AsyncSession = Depends(get_db)):
+    user_service = UserService(db)
+    created_user = await user_service.create_user(user.username, user.email, user.password)
+    return created_user
     return None
 
 # Эндпоинт для получения пользователя по ID

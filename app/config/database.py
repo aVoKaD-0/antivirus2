@@ -19,7 +19,7 @@ class AsyncPostgresDB:
         await self.pool.close()
 
 async def main():
-    db = AsyncPostgresDB("postgresql://almaz:almaz@localhost/5432")
+    db = AsyncPostgresDB("postgresql://postrges:postrges@localhost/5432")
     await db.connect()
 
     await db.execute("CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username VARCHAR(255), password VARCHAR(255))")

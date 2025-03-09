@@ -1,7 +1,6 @@
 import json
 import os
 import requests
-import logging
 from loguru import logger
 from app.repositories.file_repository import FileRepository
 

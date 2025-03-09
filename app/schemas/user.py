@@ -1,15 +1,36 @@
 from pydantic import BaseModel
+from pydantic import EmailStr
 
-class UserCreate(BaseModel):
+
+class SingUpRequest(BaseModel):
     username: str
-    email: str
-    hashed_password: str
+    email: EmailStr
+    password: str
 
-class UserResponse(BaseModel):
+class SingUpResponse(BaseModel):
     id: int
+    token: str
+
+class SignInRequest(BaseModel):
     username: str
-    email: str
+    password: str
 
-    class Config:
-        orm_mode = True
+class SignInResponse(BaseModel):
+    id: int
+    token: str
 
+class UserUpdateRequest(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+class UserUpdateResponse(BaseModel):
+    id: int
+    token: str
+
+class UserDeleteRequest(BaseModel):
+    id: int
+    token: str 
+
+class UserDeleteResponse(BaseModel):
+    status: bool
