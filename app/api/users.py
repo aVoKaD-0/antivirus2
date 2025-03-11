@@ -1,29 +1,33 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from typing import List
-from sqlalchemy.ext.asyncio import AsyncSession
-from services.user_service import UserService
-# from repositories.user_repository import UserRepository
-from app.domain.models.database import User
-from app.schemas import user as user_schema
-from app.schemas.user import SignUpRequest
-from app.domain.models.database import get_db
+# from sqlalchemy.ext.asyncio import AsyncSession
+# from app.services.user_service import UserService
+# # from repositories.user_repository import UserRepository
+# from app.schemas.user import SingUpRequest, SingUpResponse
+# from app.domain.models.database import get_db
 
-UserResponse = user_schema.UserResponse
-UserCreate = user_schema.UserCreate
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-@router.get("/", response_model=UserResponse)
+# router.mount("/static", StaticFiles(directory="app/static"), name="static")
+templates = Jinja2Templates(directory="app/templates")
+
+@router.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse("user.html", {"request": request})
 
 # Эндпоинт для создания пользователя
-@router.post("/register", response_model=UserResponse)
-async def SignUp(user: SignUpRequest, db: AsyncSession = Depends(get_db)):
-    user_service = UserService(db)
-    existing_user = await user_service.get_user_by_email(user.email)
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    created_user = await user_service.create_user(user.username, user.email, user.password)
-    return created_user
+# @router.post("/register")
+# async def SignUp(user: SingUpRequest, db: AsyncSession = Depends(get_db)):
+#     user_service = UserService(db)
+#     existing_user = await user_service.get_user_by_email(user.email)
+#     if existing_user:
+#         raise HTTPException(status_code=400, detail="Email already registered")
+#     created_user = await user_service.create_user(user.username, user.email, user.password)
+#     return created_user
 
 # # Эндпоинт для получения пользователя по ID
 # @router.get("/{user_id}", response_model=UserResponse)

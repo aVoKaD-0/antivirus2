@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, VARCHAR
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
-from db.schemas import Base 
+from database.db.schemas import Base 
 
 
 class Users(Base):

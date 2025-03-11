@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from pydantic import EmailStr
 
-
 class SingUpRequest(BaseModel):
     username: str
     email: EmailStr

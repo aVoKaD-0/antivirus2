@@ -1,12 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from urllib.parse import quote_plus
-
-username = "postgres"
-password = "postgres"
-host = "localhost"
-port = "5432"
-dbname = "antivirus"
+from database.env import username, password, host, dbname
 
 DATABASE_URL = f"postgresql://{quote_plus(username)}:{quote_plus(password)}@{host}/{dbname}"
 

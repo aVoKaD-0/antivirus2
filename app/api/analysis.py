@@ -11,17 +11,15 @@ from app.utils.file_operations import FileOperations
 from sse_starlette.sse import EventSourceResponse
 from fastapi import APIRouter, UploadFile, File, Request, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
+# from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from app.schemas import analysis
-
-AnalysisResult = analysis.AnalysisResult
+from app.schemas.analysis import AnalysisRequest
 
 
-router = APIRouter(prefix="/main", tags=["main"])
+router = APIRouter(prefix="/analysis", tags=["analysis"])
 analysis_service = AnalysisService()
 
-router.mount("/static", StaticFiles(directory="app/static"), name="static")
+# router.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/", response_class=HTMLResponse)
@@ -30,7 +28,7 @@ async def root(request: Request):
     history = FileOperations.load_user_history()
 
     return templates.TemplateResponse(
-        "index.html",
+        "analisys.html",
         {"request": request, "history": history}
     )
 
@@ -43,7 +41,7 @@ async def get_analysis_page(request: Request, analysis_id: str):
             return RedirectResponse(url="/")
 
         return templates.TemplateResponse(
-            "index.html",
+            "analisys.html",
             {
                 "request": request,
                 "analysis_id": analysis_id,
@@ -178,7 +176,7 @@ async def sse_endpoint(request: Request):
     return EventSourceResponse(event_generator())
 
 @router.post("/submit-result/")
-async def submit_result(result: AnalysisResult):
+async def submit_result(result: AnalysisRequest):
     try:
         # Опционально: обновляем статус анализа в истории,
         # например, если в result_data передан новый статус.
