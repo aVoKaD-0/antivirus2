@@ -11,3 +11,8 @@ ijson
 python-multipart
 filelock
 SQLAlchemy
+fastapi[all] python-jose[cryptography] passlib[bcrypt] fastapi-mail pyotp
+fastapi_mail
+pyotp
+captcha
+bcrypt
