@@ -1,11 +1,10 @@
 from pydantic import BaseModel
+import uuid
 
 
 class AnalysisRequest(BaseModel):
-    id: str
-    analysis_id: str
-    token: str
-    file: str
+    analysis_id: uuid.UUID
+    result_data: dict
 
 class AnalysisResponse(BaseModel):
     analysis_id: str

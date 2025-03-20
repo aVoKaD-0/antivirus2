@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Отправляем файл
             console.log("Отправка файла...")
-            const response = await fetch('/analyze', {
+            const response = await fetch('/analysis/analyze', {
                 method: 'POST',
                 body: formData,
                 headers: token ? {'Authorization': `Bearer ${token}`} : {}
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
             statusSpinner.style.display = 'none';
 
             console.log("Переходим на страницу /analysis/" + runId);
-            window.location.href = `/analysis/${runId}`;
+            window.location.href = `/analysis/analysis/${runId}`;
         } catch (error) {
             console.error('Error uploading file:', error);
             analysisStatus.textContent = 'Ошибка при загрузке файла: ' + error.message;
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.view-results-btn').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         const analysisId = e.target.closest('.history-item').dataset.analysisId;
-                        window.location.href = '/analysis/' + analysisId;
+                        window.location.href = '/analysis/analysis/' + analysisId;
                     });
                 });
             } else {
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.view-results-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             const analysisId = e.target.closest('.history-item').dataset.analysisId;
-            window.location.href = '/analysis/' + analysisId;
+            window.location.href = '/analysis/analysis/' + analysisId;
         });
     });
 

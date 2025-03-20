@@ -12,93 +12,157 @@ from fastapi import Request
 import subprocess
 import csv
 from app.utils.logging import Logger
+from app.infrastructure.repositories.analysis import hyper
+from app.services.db_service import AnalysisDbService
+from migrations.database.db.models import Analysis, Results
+from sqlalchemy.sql import func, text, select
+from app.infrastructure.repositories.analysis import hyper
 
 
-project_dir = os.getcwd()[:os.getcwd().index("antivirus")].replace('\\', '\\')
+project_dir = os.getcwd()[:os.getcwd().index("antivirus")].replace('\\', '\\')+"antivirus2"
 
 
 class FileOperations:
-    def user_upload(client_ip):
-        return os.makedirs(os.path.join("uploads", client_ip), exist_ok=True)
+    @staticmethod
+    def user_upload(email):
+        upload_path = os.path.join(hyper, "files", email)
+        os.makedirs(upload_path, exist_ok=True)
+        return upload_path  # Возвращаем путь к директории
 
+    @staticmethod
     def user_file_upload(file, user_upload_folder):
-        with open(os.path.join(user_upload_folder, file.filename), "wb") as buffer:
+        if not user_upload_folder:
+            raise ValueError("Путь для загрузки файла не указан")
+            
+        file_path = os.path.join(user_upload_folder, file.filename)
+        with open(file_path, "wb") as buffer:
             copyfileobj(file.file, buffer)
 
     def run_ID():
-        return str(uuid.uuid4())
+        return uuid.uuid4()
     
-    def load_user_history():
-        history_file = "app/logs/history.json"
-        if os.path.exists(history_file):
-            with open(history_file, "r", encoding="utf-8-sig") as file:
-                return json.load(file)
-        return []
-
-    def save_user_history(history: list):
-        history_dir = "app/logs"
-        os.makedirs(history_dir, exist_ok=True)
-        history_file = os.path.join(history_dir, "history.json")
-        with open(history_file, "w") as file:
-            json.dump(history, file, indent=4)
-
-    def get_client_ip(request: Request):
-        if request.headers.get('X-Forwarded-For'):
-            ip = request.headers.get('X-Forwarded-For').split(',')[0]
-        else:
-            ip = request.client.host
-        return ip 
+    @staticmethod
+    async def get_user_analyses(user_id: str):
+        db_service = AnalysisDbService()
+        return await db_service.get_user_analyses(user_id)
     
-    def get_result_data(analysis_id: str) -> dict:
-        results_file = os.path.join("results", analysis_id, "results.json")
-        preview = []
-        total = 0
-        # Читаем только массив file_activity через ijson, чтобы избежать загрузки полного файла в память
-        with open(results_file, "r", encoding="utf-8") as f:
-            parser = ijson.items(f, "file_activity.item")
-            for item in parser:
-                if total < 100:
-                    preview.append(item)
-                total += 1
-
-        docker_output = ""
-        # Если docker_output находится в конце файла, читаем последние 100 КБ
-        with open(results_file, "rb") as f:
-            f.seek(0, os.SEEK_END)
-            file_size = f.tell()
-            read_size = 1000 * 1024  # 100 КБ
-            start_pos = max(file_size - read_size, 0)
-            f.seek(start_pos)
-            tail = f.read().decode("utf-8", errors="replace")
-            m = re.search(r'"docker_output"\s*:\s*"([^"]*)"', tail)
-            if m:
-                docker_output = m.group(1)
-
-        result = {
-            "file_activity": preview,
-            "docker_output": docker_output,
-            "total": total
-        }
-        return result
+    @staticmethod
+    async def get_analysis_details(analysis_id: str):
+        db_service = AnalysisDbService()
+        return await db_service.get_result(analysis_id)
     
+    @staticmethod
+    async def get_chunk_result(analysis_id: str, offset: int = 0, limit: int = 50):
+        db_service = AnalysisDbService()
+        async with await db_service.get_db() as session:
+            result = await session.execute(
+                text(f"""
+                    SELECT jsonb_path_query_array(
+                        file_activity,
+                        '$.items[{offset} to {offset + limit - 1}]'
+                    )
+                    FROM results
+                    WHERE analysis_id = :analysis_id
+                """),
+                {"analysis_id": analysis_id}
+            )
+            total = await session.execute(
+                text("""
+                    SELECT jsonb_array_length(file_activity)
+                    FROM results
+                    WHERE analysis_id = :analysis_id
+                """),
+                {"analysis_id": analysis_id}
+            )
+            return result.scalar(), total.scalar()
+
+    @staticmethod
+    async def save_user_history(analysis_id: str, history: list):
+        db = AnalysisDbService()
+        await db.save_activity(analysis_id, history)
+
+    # def get_client_ip(request: Request):
+    #     if request.headers.get('X-Forwarded-For'):
+    #         ip = request.headers.get('X-Forwarded-For').split(',')[0]
+    #     else:
+    #         ip = request.client.host
+    #     return ip 
+
+    @staticmethod
+    async def create_analysis(user_id: str, filename: str, timestamp: str, status: str, analysis_id: uuid.UUID):
+        db_service = AnalysisDbService()
+        analysis = Analysis(
+            user_id=user_id, 
+            filename=filename, 
+            timestamp=timestamp, 
+            status=status, 
+            analysis_id=analysis_id
+        )
+        return await db_service.add(analysis)
+    
+    @staticmethod
+    async def create_result(analysis_id: uuid.UUID, file_activity: str, docker_output: str, results: str):
+        db_service = AnalysisDbService()
+        result = Results(
+            analysis_id=analysis_id, 
+            file_activity=file_activity, 
+            docker_output=docker_output, 
+            results=results
+        )
+        return await db_service.add(result)
+    
+    @staticmethod
+    async def get_result_data(analysis_id: str) -> dict:
+        db_service = AnalysisDbService()
+        async with await db_service.get_db() as session:
+            result = await session.execute(
+                select(Results).filter(Results.analysis_id == analysis_id)
+            )
+            result_obj = result.scalars().first()
+            
+            analysis = await session.execute(
+                select(Analysis).filter(Analysis.analysis_id == analysis_id)
+            )
+            analysis_obj = analysis.scalars().first()
+            
+            if not result_obj and not analysis_obj:
+                return {
+                    "status": "unknown",
+                    "file_activity": [],
+                    "docker_output": "",
+                    "total": 0
+                }
+            
+            return {
+                "status": analysis_obj.status if analysis_obj else "unknown",
+                "file_activity": result_obj.file_activity if result_obj and result_obj.file_activity else [],
+                "docker_output": result_obj.docker_output if result_obj and result_obj.docker_output else "",
+                "total": result_obj.results if result_obj and result_obj.results else 0
+            }
+    
+    @staticmethod
+    async def save_result(analysis_id: str, file_activity: str):
+        db_service = AnalysisDbService()
+        await db_service.save_activity(analysis_id, file_activity)
+
     def delete_vm(analysis_id):
         time.sleep(5)
         while True:
             try:
-                rmtree(f"{project_dir}\\Hyper\\{analysis_id}")
+                rmtree(f"{hyper}\\analysis_VMs\\{analysis_id}")
                 break
             except:
-                Logger.global_log(f"Виртуальная машина {analysis_id} не удалена. Ожидание 5 секунд...", analysis_id)
+                Logger.log(f"Виртуальная машина {analysis_id} не удалена. Ожидание 5 секунд...", analysis_id)
                 time.sleep(5)
-        Logger.global_log(f"Виртуальная машина {analysis_id} удалена.", analysis_id)
+        Logger.log(f"Виртуальная машина {analysis_id} удалена.", analysis_id)
 
 
-    def get_client_ip(request: Request):
-        if request.headers.get('X-Forwarded-For'):
-            ip = request.headers.get('X-Forwarded-For').split(',')[0]
-        else:
-            ip = request.client.host
-        return ip 
+    # def get_client_ip(request: Request):
+    #     if request.headers.get('X-Forwarded-For'):
+    #         ip = request.headers.get('X-Forwarded-For').split(',')[0]
+    #     else:
+    #         ip = request.client.host
+    #     return ip 
     
     # Функция ожидания запуска VM
     def wait_for_vm_running(vm_name, analysis_id, timeout=300):
@@ -113,24 +177,24 @@ class FileOperations:
                 if state == "Running":
                     return True
             except subprocess.CalledProcessError as e:
-                Logger.global_log(f"Ошибка при получении состояния VM: {e.output.strip()}", analysis_id)
+                Logger.log(f"Ошибка при получении состояния VM: {e.output.strip()}", analysis_id)
             time.sleep(5)
         return False
 
-    def export_procmon_logs(analysis_id, pml_file_path):
-        results_dir = os.path.join("results", analysis_id)
+    async def export_procmon_logs(analysis_id, pml_file_path):
+        results_dir = os.path.join(hyper, "results", analysis_id)
         csv_file = os.path.join(results_dir, "procmon.csv")
 
         # Команда для экспорта логов из PML в CSV с использованием Procmon.exe.
         # Убедитесь, что Procmon.exe доступен (или задайте полный путь к нему).
-        export_command = f'{project_dir}\\tools\\Procmon.exe /OpenLog "{pml_file_path}" /SaveAs "{csv_file}" /Quiet'
+        export_command = f'{hyper}\\tools\\Procmon.exe /OpenLog "{pml_file_path}" /SaveAs "{csv_file}" /Quiet'
         try:
-            Logger.global_log("Экспортируем логи Procmon в CSV...", analysis_id)
-            subprocess.run(["powershell", "-Command", export_command], check=True)
+            Logger.log("Экспортируем логи Procmon в CSV...", analysis_id)
+            await subprocess.run(["powershell", "-Command", export_command], check=True)
 
-            time.sleep(30)
+            # time.sleep(30)
 
-            Logger.global_log("Конвертируем CSV в JSON...", analysis_id)
+            Logger.log("Конвертируем CSV в JSON...", analysis_id)
             activity = []
             with open(csv_file, "r", encoding="utf-8-sig") as f:
                 reader = csv.DictReader(f)
@@ -138,21 +202,17 @@ class FileOperations:
                     if row.get("Process Name") != "Procmon64.exe" and row.get("Process Name") != "Procmon.exe":
                         activity.append(row)
 
-            Logger.global_log("Сохраняем результаты в файл...", analysis_id)
+            Logger.log("Сохраняем результаты в файл...", analysis_id)
 
-            results_data = FileOperations.get_result_data(analysis_id)
-
-            results_data["file_activity"] = activity
-
-            FileOperations.save_results(results_data, analysis_id)
-            Logger.global_log(f"Результаты сохранены в results_data", analysis_id)
+            FileOperations.save_results(analysis_id, activity)
+            Logger.log(f"Результаты сохранены в activitety", analysis_id)
             
             os.remove(f"{project_dir}\\results\\{analysis_id}\\procmon.csv")
             os.remove(f"{project_dir}\\results\\{analysis_id}\\procmon.pml")
             # Отправка результатов на сервер
-            Logger.send_result_to_server(analysis_id, {"status": "completed"}, True)
+            Logger.send_result_to_server(analysis_id, {"status": "completed"})
             FileOperations.delete_vm(analysis_id)
         except Exception as e:
-            Logger.global_log(f"Ошибка при экспорте логов Procmon: {e}", analysis_id)
-            Logger.send_result_to_server(analysis_id, {"status": "error", "message": str(e)}, False)
+            Logger.log(f"Ошибка при экспорте логов Procmon: {e}", analysis_id)
+            Logger.send_result_to_server(analysis_id, {"status": "error", "message": str(e)})
             FileOperations.delete_vm(analysis_id)

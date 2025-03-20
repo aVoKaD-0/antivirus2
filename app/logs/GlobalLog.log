@@ -4,3 +4,32 @@
 2025-03-09 01:09:03.524 | INFO     | app.utils.logging:log:15 - SSE endpoint called
 2025-03-09 01:09:03.532 | INFO     | app.utils.logging:log:15 - Event generator started
 2025-03-09 01:14:58.657 | INFO     | app.utils.logging:log:15 - Event generator finished
+2025-03-19 22:23:25.570 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:24:48.655 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:29:29.674 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:32:28.002 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:32:34.063 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:32:39.791 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:34:06.508 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: This transaction is closed
+2025-03-19 22:36:16.079 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: This transaction is closed
+2025-03-19 22:38:28.520 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: This transaction is closed
+2025-03-19 22:40:36.737 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: This transaction is closed
+2025-03-19 22:41:39.556 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:43:56.225 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: This transaction is closed
+2025-03-19 22:47:58.778 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: This transaction is closed
+2025-03-19 22:49:04.451 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: This transaction is closed
+2025-03-19 22:50:50.328 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: This transaction is closed
+2025-03-19 22:52:24.564 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:53:12.946 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:56:19.877 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 22:57:44.949 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 23:00:11.782 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'coroutine' object has no attribute 'docker_output'
+2025-03-19 23:03:26.396 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: fbefe8b4-923c-450d-8bf2-dde0bb9d5c60
+2025-03-19 23:05:10.366 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 5e28141c-11ab-468d-977f-3e25209554ef
+2025-03-19 23:06:51.652 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 3cc7c6e5-c4c2-402b-a646-c15ff3d9ab17
+2025-03-19 23:15:50.405 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: c61f6a1a-f3d6-4daa-a547-5f59ccc6254a
+2025-03-19 23:17:44.513 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 069b816f-5492-4387-9f60-f08b20b99494
+2025-03-19 23:22:23.312 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 358572e6-b287-46c2-90fa-1a487131fa75
+2025-03-19 23:23:55.696 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 2c71006e-09ab-4d87-bd25-bd84f3c02510
+2025-03-20 17:29:18.961 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: b63cdf8e-9b41-4d6b-9cb2-652878005427
+2025-03-20 18:30:59.786 | INFO     | app.utils.logging:log:14 - [61454e7c-b20b-4b8d-9f56-cd48a7e4ca06] ⚠️ Ошибка соединения: HTTPConnectionPool(host='192.168.31.153', port=8080): Max retries exceeded with url: /submit-result/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002356C861970>: Failed to establish a new connection: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение'))

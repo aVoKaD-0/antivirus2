@@ -2,8 +2,7 @@ from pydantic import BaseModel
 from pydantic import EmailStr
 
 class SingUpRequest(BaseModel):
-    username: str
-    email: EmailStr
+    email: str
     password: str
 
 class SingUpResponse(BaseModel):
@@ -11,7 +10,7 @@ class SingUpResponse(BaseModel):
     token: str
 
 class SignInRequest(BaseModel):
-    username: str
+    email: str
     password: str
 
 class SignInResponse(BaseModel):
@@ -33,3 +32,6 @@ class UserDeleteRequest(BaseModel):
 
 class UserDeleteResponse(BaseModel):
     status: bool
+
+class EmailConfirmation(BaseModel):
+    code: str

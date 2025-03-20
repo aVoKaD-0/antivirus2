@@ -3,29 +3,37 @@ import json
 import ijson
 import datetime
 import asyncio
+import uuid
 from app.services.analysis_service import AnalysisService
 # from app.repositories.file_repository import FileRepository
 from app.utils.sse_operations import subscribers
 from app.utils.logging import Logger
 from app.utils.file_operations import FileOperations
 from sse_starlette.sse import EventSourceResponse
-from fastapi import APIRouter, UploadFile, File, Request, HTTPException
+from fastapi import APIRouter, UploadFile, File, Request, HTTPException, Depends
 from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
-# from fastapi.staticfiles import StaticFiles
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.schemas.analysis import AnalysisRequest
+from app.auth.auth import uuid_by_token
+from app.domain.models.database import get_db
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 router = APIRouter(prefix="/analysis", tags=["analysis"])
 analysis_service = AnalysisService()
 
-# router.mount("/static", StaticFiles(directory="app/static"), name="static")
+router.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
+
+# @router.get("/protected")
+# async def protected_route(username: str = Depends(get_current_user)):
+#     return {"message": f"Hello, {username}!"}
 
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     # Получаем историю пользователя
-    history = FileOperations.load_user_history()
+    history = await FileOperations.get_user_analyses(uuid_by_token(request.cookies.get("refresh_token")))
 
     return templates.TemplateResponse(
         "analisys.html",
@@ -33,21 +41,23 @@ async def root(request: Request):
     )
 
 @router.get("/analysis/{analysis_id}")
-async def get_analysis_page(request: Request, analysis_id: str):
+async def get_analysis_page(request: Request, analysis_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     try:
-        history = FileOperations.load_user_history()
-        analysis = next((item for item in history if item["analysis_id"] == analysis_id), None)
-        if not analysis:
+        history = await FileOperations.get_user_analyses(uuid_by_token(request.cookies.get("refresh_token")))
+        
+        # Получаем данные анализа
+        analysis_data = await FileOperations.get_result_data(str(analysis_id))
+        if not analysis_data:
             return RedirectResponse(url="/")
 
         return templates.TemplateResponse(
             "analisys.html",
             {
                 "request": request,
-                "analysis_id": analysis_id,
-                "status": analysis["status"],
-                "file_activity": [],
-                "docker_output": "",
+                "analysis_id": str(analysis_id),
+                "status": analysis_data.get("status", "unknown"),
+                "file_activity": analysis_data.get("file_activity", []),
+                "docker_output": analysis_data.get("docker_output", ""),
                 "history": history
             }
         )
@@ -58,69 +68,63 @@ async def get_analysis_page(request: Request, analysis_id: str):
 @router.post("/analyze")
 async def analyze_file(request: Request, file: UploadFile = File(...)):
     try:
-        client_ip = FileOperations.get_client_ip
-        user_upload_folder = FileOperations.user_upload
+        refresh_token = request.cookies.get("refresh_token")
+        uuid = uuid_by_token(refresh_token)
 
-        FileOperations.user_file_upload(file=file, user_upload_folder=user_upload_folder)
+        print(1)
+        
+        # Получаем путь для загрузки
+        upload_folder = FileOperations.user_upload(uuid)
+        if not upload_folder:
+            raise HTTPException(status_code=500, detail="Не удалось создать директорию для загрузки")
+        
+        print(2)
+            
+        # Загружаем файл
+        FileOperations.user_file_upload(file=file, user_upload_folder=upload_folder)
+        print(3)
 
-        run_id = FileOperations.run_ID
+        run_id = FileOperations.run_ID()
+        print(4)
 
-        await analysis_service.analyze(run_id, file.filename, client_ip=client_ip)
+        # Создаем запись об анализе и результате
+        analysis = await FileOperations.create_analysis(uuid, file.filename, str(run_id), "running", run_id)
 
-        # Обновляем историю: сохраняем только analysis_id, filename, timestamp и status.
-        history = Logger.load_user_history()
-        history.routerend({
-            "analysis_id": run_id,
-            "filename": file.filename,
-            "timestamp": datetime.now().isoformat(),
-            "status": "running"
-        })
-        FileOperations.save_user_history(history)
+        print(5)
 
-        # Создаем пустую запись в results.json для хранения file_activity и docker_output.
-        os.makedirs(os.path.join("results", run_id), exist_ok=True)
-        results = FileOperations.load_user_results(run_id)
-        FileOperations.save_user_results(results, run_id)
+        result = await FileOperations.create_result(run_id, "", "", "")
+
+        print(6)
+
+        # Запускаем анализ
+        asyncio.create_task(analysis_service.analyze(str(run_id), file.filename, uuid=uuid))
+
+        print(7)
 
         Logger.log(f"Файл загружен и анализ запущен. ID анализа: {run_id}")
         
         return JSONResponse({
-            "status": "success",
-            "analysis_id": run_id
+            "status": "running",
+            "analysis_id": str(run_id)
         })
     except Exception as e:
-        (f"Ошибка при анализе файла: {str(e)}")
+        Logger.log(f"Ошибка при анализе файла: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/results/{analysis_id}")
-async def get_results(analysis_id: str):
+async def get_results(analysis_id: uuid.UUID):
     try:
-        result_data = FileOperations.get_result_data(analysis_id)
+        result_data = await FileOperations.get_result_data(str(analysis_id))
         return JSONResponse(result_data)
     except Exception as e:
         return JSONResponse(status_code=500, content={"detail": str(e)})
 
 @router.get("/results/{analysis_id}/chunk")
-async def get_results_chunk(analysis_id: str, offset: int = 0, limit: int = 50):
+async def get_results_chunk(analysis_id: uuid.UUID, offset: int = 0, limit: int = 50, db: AsyncSession = Depends(get_db)):
     try:
-        # Определяем путь к файлу результатов.
-        # Предполагается, что результаты хранятся в файле data/{analysis_id}/results.json
-        results_file = os.path.join("results", analysis_id, "results.json")
-        if not os.path.exists(results_file):
-            return JSONResponse(status_code=404, content={"detail": "Результаты не найдены"})
-
-        chunk = []
-        total = 0
-
-        with open(results_file, "r", encoding="utf-8") as f:
-            parser = ijson.items(f, "file_activity.item")
-            for item in parser:
-                if total >= offset and len(chunk) < limit:
-                    chunk.routerend(item)
-                total += 1
-
+        result, total = await FileOperations.get_chunk_result(str(analysis_id), offset, limit)
         return JSONResponse({
-            "chunk": chunk,
+            "chunk": result,
             "offset": offset,
             "limit": limit,
             "total": total
@@ -178,15 +182,7 @@ async def sse_endpoint(request: Request):
 @router.post("/submit-result/")
 async def submit_result(result: AnalysisRequest):
     try:
-        # Опционально: обновляем статус анализа в истории,
-        # например, если в result_data передан новый статус.
-        history = FileOperations.load_user_history()
-        for entry in history:
-            if entry["analysis_id"] == result.analysis_id:
-                entry["status"] = result.result_data.get("status", "completed")
-                break
-        FileOperations.save_user_history(history)
-
+        await FileOperations.save_result(result.analysis_id, result.result_data)
         return {"status": "completed"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
