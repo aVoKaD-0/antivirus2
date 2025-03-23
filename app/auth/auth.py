@@ -65,9 +65,11 @@ async def verify_token(token: str = Depends(oauth2_scheme)):
     return username
 
 def refresh_token(token: str = Depends(oauth2_scheme)):
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    print(token)
+    payload = jwt.decode(token=token, key=SECRET_KEY, algorithms=[ALGORITHM])
+    print(payload)
     uuid = payload.get("sub")
-    return payload, uuid
+    return uuid
 
 async def send_email(email: str, body: str):
     message = MessageSchema(

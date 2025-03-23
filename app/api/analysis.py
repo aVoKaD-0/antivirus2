@@ -18,10 +18,12 @@ from app.schemas.analysis import AnalysisRequest
 from app.auth.auth import uuid_by_token
 from app.domain.models.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.services.user_service import UserService
+from app.services.db_service import AnalysisDbService
 
 
 router = APIRouter(prefix="/analysis", tags=["analysis"])
-analysis_service = AnalysisService()
+# analysis_service = AnalysisService()
 
 router.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
@@ -31,9 +33,10 @@ templates = Jinja2Templates(directory="app/templates")
 #     return {"message": f"Hello, {username}!"}
 
 @router.get("/", response_class=HTMLResponse)
-async def root(request: Request):
+async def root(request: Request, db: AsyncSession = Depends(get_db)):
+    userservice = UserService(db)
     # Получаем историю пользователя
-    history = await FileOperations.get_user_analyses(uuid_by_token(request.cookies.get("refresh_token")))
+    history = await userservice.get_user_analyses(uuid_by_token(request.cookies.get("refresh_token")))
 
     return templates.TemplateResponse(
         "analisys.html",
@@ -43,10 +46,12 @@ async def root(request: Request):
 @router.get("/analysis/{analysis_id}")
 async def get_analysis_page(request: Request, analysis_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     try:
-        history = await FileOperations.get_user_analyses(uuid_by_token(request.cookies.get("refresh_token")))
+        userservice = UserService(db)
+
+        history = await userservice.get_user_analyses(uuid_by_token(request.cookies.get("refresh_token")))
         
         # Получаем данные анализа
-        analysis_data = await FileOperations.get_result_data(str(analysis_id))
+        analysis_data = await userservice.get_result_data(str(analysis_id))
         if not analysis_data:
             return RedirectResponse(url="/")
 
@@ -66,40 +71,26 @@ async def get_analysis_page(request: Request, analysis_id: uuid.UUID, db: AsyncS
         return RedirectResponse(url="/")
 
 @router.post("/analyze")
-async def analyze_file(request: Request, file: UploadFile = File(...)):
+async def analyze_file(request: Request, file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
     try:
+        userservice = UserService(db)
         refresh_token = request.cookies.get("refresh_token")
         uuid = uuid_by_token(refresh_token)
+        run_id = FileOperations.run_ID()
 
-        print(1)
-        
-        # Получаем путь для загрузки
-        upload_folder = FileOperations.user_upload(uuid)
+        upload_folder = FileOperations.user_upload(str(run_id))
         if not upload_folder:
             raise HTTPException(status_code=500, detail="Не удалось создать директорию для загрузки")
         
-        print(2)
-            
-        # Загружаем файл
         FileOperations.user_file_upload(file=file, user_upload_folder=upload_folder)
-        print(3)
 
-        run_id = FileOperations.run_ID()
-        print(4)
+        await userservice.create_analysis(uuid, file.filename, str(run_id), "running", run_id)
 
-        # Создаем запись об анализе и результате
-        analysis = await FileOperations.create_analysis(uuid, file.filename, str(run_id), "running", run_id)
+        await userservice.create_result(run_id)
 
-        print(5)
+        analysis_service = AnalysisService(file.filename, str(run_id), str(uuid))
 
-        result = await FileOperations.create_result(run_id, "", "", "")
-
-        print(6)
-
-        # Запускаем анализ
-        asyncio.create_task(analysis_service.analyze(str(run_id), file.filename, uuid=uuid))
-
-        print(7)
+        asyncio.create_task(analysis_service.analyze())
 
         Logger.log(f"Файл загружен и анализ запущен. ID анализа: {run_id}")
         
@@ -112,17 +103,22 @@ async def analyze_file(request: Request, file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/results/{analysis_id}")
-async def get_results(analysis_id: uuid.UUID):
+async def get_results(analysis_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
     try:
-        result_data = await FileOperations.get_result_data(str(analysis_id))
+        print(str(analysis_id))
+        userservice = UserService(db)
+        result_data = await userservice.get_result_data(str(analysis_id))
+        print("ok")
         return JSONResponse(result_data)
     except Exception as e:
+        print("NOT OK")
         return JSONResponse(status_code=500, content={"detail": str(e)})
 
 @router.get("/results/{analysis_id}/chunk")
 async def get_results_chunk(analysis_id: uuid.UUID, offset: int = 0, limit: int = 50, db: AsyncSession = Depends(get_db)):
     try:
-        result, total = await FileOperations.get_chunk_result(str(analysis_id), offset, limit)
+        userservice = UserService(db)
+        result, total = await userservice.get_chunk_result(str(analysis_id), offset, limit)
         return JSONResponse({
             "chunk": result,
             "offset": offset,
@@ -156,28 +152,28 @@ async def download_page(request: Request, analysis_id: str):
     </html>
     """
 
-@router.get("/sse")
-async def sse_endpoint(request: Request):
-    Logger.log("SSE endpoint called")
-    async def event_generator():
-        Logger.log("Event generator started")
-        q = asyncio.Queue()
-        subscribers.routerend(q)
-        try:
-            while True:
-                # Если клиент разорвал соединение, завершаем генерацию
-                if await request.is_disconnected():
-                    Logger.log("Client disconnected")
-                    break
-                # Ждем следующее событие
-                data = await q.get()
-                # Формируем SSE-сообщение (обратите внимание на формат)
-                Logger.log(f"Sending data: {data}")
-                yield f"data: {json.dumps(data)}\n\n"
-        finally:
-            Logger.log("Event generator finished")
-            subscribers.remove(q)
-    return EventSourceResponse(event_generator())
+# @router.get("/sse")
+# async def sse_endpoint(request: Request):
+#     Logger.log("SSE endpoint called")
+#     async def event_generator():
+#         Logger.log("Event generator started")
+#         q = asyncio.Queue()
+#         subscribers.routerend(q)
+#         try:
+#             while True:
+#                 # Если клиент разорвал соединение, завершаем генерацию
+#                 if await request.is_disconnected():
+#                     Logger.log("Client disconnected")
+#                     break
+#                 # Ждем следующее событие
+#                 data = await q.get()
+#                 # Формируем SSE-сообщение (обратите внимание на формат)
+#                 Logger.log(f"Sending data: {data}")
+#                 yield f"data: {json.dumps(data)}\n\n"
+#         finally:
+#             Logger.log("Event generator finished")
+#             subscribers.remove(q)
+#     return EventSourceResponse(event_generator())
 
 @router.post("/submit-result/")
 async def submit_result(result: AnalysisRequest):

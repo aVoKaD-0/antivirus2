@@ -4,219 +4,210 @@ from app.utils.logging import Logger
 import os
 import subprocess
 import time
-from app.infrastructure.repositories.analysis import hyper
+from app.infrastructure.repositories.analysis import docker, docker2
 from app.services.db_service import AnalysisDbService
+from sqlalchemy.ext.asyncio import AsyncSession
+import asyncio
+from app.domain.models.database import get_db
+from concurrent.futures import ThreadPoolExecutor
 
 # Получение учетных данных пользователя
 username = "docker"
 password = "docker"
 
 class AnalysisService:
-    def __init__(self):
+    def __init__(self, filename: str, analysis_id: str, uuid: str):
         self.db = None
+        self.uuid = uuid
+        self.filename = filename
+        self.analysis_id = analysis_id 
+        self.lock = asyncio.Lock()  # Создаем объект Lock
 
-    async def get_db(self):
-        self.db = AnalysisDbService()
-        await self.db.get_db()
 
-    async def analyze(self, analysis_id, exe_filename, uuid):
-        await Logger.analysis_log("Анализ файла начат", analysis_id, self.db)
-        logs = ""
+    def update_dockerfile(self):
+        file = self.filename[:-4]
+        print(file)
+        dockerfile_content = f"""FROM mcr.microsoft.com/windows/servercore:ltsc2022
+WORKDIR C:\\\\sandbox
+COPY {self.filename} .
+RUN powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force"
+CMD ["powershell", "-command", "Start-Process -FilePath 'C:\\\\sandbox\\\\{self.filename}' -NoNewWindow -PassThru; Start-Sleep -Seconds 60"]
+"""
+        
+        if not os.path.exists(f"{docker}\\{self.analysis_id}"):
+            os.makedirs(f"{docker}\\{self.analysis_id}")
+        
+        with open(f"{docker}\\{self.analysis_id}\\Dockerfile", 'w') as dockerfile:
+            dockerfile.write(dockerfile_content)
+
+    def build_docker(self):
+        print("Сборка Docker-образа...")
+        subprocess.run(["powershell", "-command", f"docker build -t analysis_{self.analysis_id} -f {docker}\\{self.analysis_id}\\Dockerfile {docker}\\{self.analysis_id}\\"], check=True)
+
+    async def run_in_executor(self, command):
+        loop = asyncio.get_event_loop()
+        with ThreadPoolExecutor() as pool:
+            result = await loop.run_in_executor(
+                pool, 
+                lambda: subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            )
+        return result
+
+    async def run_docker(self):
+        print("Запуск контейнера...")
+        command = ["powershell", "-command", f"docker run -it --isolation=process --name analysis_{self.analysis_id} analysis_{self.analysis_id}"]
+        result = await self.run_in_executor(command)
+        print("Контейнер успешно завершил работу.")
+        await self.stop_etw()  # После завершения контейнера останавливаем ETW
+        await self.get_file_changes()
+        return
+
+    async def get_docker_output(self):
+        print("Получение логов...")
+        process = await asyncio.create_subprocess_exec(
+            "powershell", "-command", f"docker logs analysis_{self.analysis_id}",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await process.communicate()
+
+    async def run_etw(self):
+        print("Запуск ETW для мониторинга файлов...")
+        await asyncio.sleep(7)
+        etw_command = ["powershell", "-command", f"xperf -on PROC_THREAD+LOADER+FILE_IO -f {docker}\\{self.analysis_id}\\trace.etl"]
+        result = await self.run_in_executor(etw_command)
+        print("ETW успешно запущен.")
+
+    async def stop_etw(self):
         try:
-            await Logger.analysis_log(f"Импорт виртуальной машины с новым именем {analysis_id}", analysis_id, self.db)
-            # os.path.join(hyper, "analysis_VMs", analysis_id, "Virtual Hard Disks")
-            # import_vm_command = f"""
-            # $vm = Import-VM -Path "{hyper}\\dock\\Virtual Machines\\118471C8-F8E1-4DF6-97A4-45D0FDF4C2D7.vmcx" -Copy -GenerateNewId -VirtualMachinePath "{hyper}\\analysis_VMs\\{analysis_id}" -VhdDestinationPath "{hyper}\\analysis_VMs\\{analysis_id}\\Virtual Hard Disks"
-            # Rename-VM -VM $vm -NewName "{analysis_id}"
-            # """
-            # subprocess.run(["powershell", "-Command", import_vm_command], check=True)
-
-            await Logger.analysis_log(f"Виртуальная машина импортирована как {analysis_id}.", analysis_id, self.db)
-
-            diskcreate = f"""$pathdisk = "{hyper}\\temporary_disks\\{analysis_id}.vhdx"
-                    # New-VHD -Path $pathdisk -SizeBytes 2GB -Dynamic
-                    # Mount-VHD -Path $pathdisk
-                    # $diskNumber = (Get-VHD -Path "$pathdisk").DiskNumber
-                    # Initialize-Disk -Number $diskNumber
-                    # New-Partition -DiskNumber $diskNumber -UseMaximumSize | Format-Volume -FileSystem NTFS -NewFileSystemLabel "SecureDisk"
-                    # $partition = Get-Partition -DiskNumber $diskNumber
-                    # $mainPartition = ($partition | Where-Object {{ $_.Type -eq "Basic" }})
-                    # $guid = $mainPartition.Guid
-                    # $path = "\\\\?\\Volume$($guid)\\"
-                    # $securePassword = ConvertTo-SecureString -String "12345678" -AsPlainText -Force
-                    # Enable-BitLocker -MountPoint "$path" -EncryptionMethod Aes256 -PasswordProtector -Password $securePassword
-                    Add-VMHardDiskDrive -VMName "{analysis_id}" -Path $pathdisk
-                    Dismount-VHD -Path $pathdisk
-                    """
-            
-            subprocess.run(["powershell", "-Command", diskcreate], check=True)
-            
-            # Включение Guest Service Interface для VM
-            await Logger.analysis_log(f"Включение Guest Service Interface для VM {analysis_id}", analysis_id, self.db)
-            enable_guest_service_command = f"""
-            Enable-VMIntegrationService -VMName "{analysis_id}" -Name "Интерфейс гостевой службы"
-            """
-            subprocess.run(["powershell", "-Command", enable_guest_service_command], check=True)
-            await Logger.analysis_log("Guest Service Interface включен для виртуальной машины.", analysis_id, self.db)
-
-            try:
-                # Запуск виртуальной машины
-                await Logger.analysis_log(f"Запуск виртуальной машины {analysis_id}", analysis_id, self.db)
-                start_vm_command = f"""
-                Start-VM -Name "{analysis_id}"
-                """
-                subprocess.run(["powershell", "-Command", start_vm_command], check=True)
-                await Logger.analysis_log(f"Виртуальная машина {analysis_id} запущена.", analysis_id, self.db)
-            except Exception as e:
-                # Остановка виртуальной машины в случае ошибки
-                await Logger.analysis_log(f"Остановка виртуальной машины {analysis_id}", analysis_id, self.db)
-                stop_vm_command = f"""
-                Stop-VM -Name "{analysis_id}"
-                Remove-VM -Name "{analysis_id}" -Force
-                """
-                subprocess.run(["powershell", "-Command", stop_vm_command], check=True)
-                await Logger.analysis_log("VM остановлена", analysis_id, self.db)
-                await Logger.analysis_log(f"Ошибка при запуске виртуальной машины: {str(e)}", analysis_id, self.db)
-                await Logger.send_result_to_server(analysis_id, {"status": "error", "message": str(e)})
-                return
-
-            # Ожидание запуска VM
-            if not FileOperations.wait_for_vm_running(analysis_id, analysis_id):
-                raise Exception(f"Виртуальная машина {analysis_id} не смогла запуститься в течение 300 секунд.", analysis_id)
-            
-            time.sleep(30)
-            
-            # Копирование файла в VM
-            await Logger.analysis_log(f"Копирование файла в VM {analysis_id} {exe_filename}", analysis_id, self.db)
-            copy_file_command = f"""
-            Copy-VMFile -Name "{analysis_id}" -SourcePath "{hyper}\\files\\{uuid}\\{exe_filename}" -DestinationPath "C:\\Path\\InsideVM\\{exe_filename}" -CreateFullPath -FileSource Host
-            Disable-VMIntegrationService -VMName "{analysis_id}" -Name "Интерфейс гостевой службы"
-            """
-            subprocess.run(["powershell", "-Command", copy_file_command], check=True)
-            await Logger.analysis_log(f"Файл {exe_filename} успешно скопирован в виртуальную машину {analysis_id}.", analysis_id, self.db)
-            
-            await Logger.analysis_log(f"Настройка и запуск Procmon {analysis_id} {exe_filename}", analysis_id, self.db)
-            local_procmon_path = f"{hyper}\\tools\\Procmon.exe"
-            
-            # Проверка существования файла Procmon на хосте
-            if not os.path.exists(local_procmon_path):
-                raise FileNotFoundError(f"Procmon.exe не найден по пути {local_procmon_path}")
-
-            setup_and_start_procmon_command = f"""
-            $secpasswd = ConvertTo-SecureString "{password}" -AsPlainText -Force;
-            $credential = New-Object System.Management.Automation.PSCredential ("{username}", $secpasswd);
-            $session = New-PSSession -VMName "{analysis_id}" -Credential $credential;
-            Invoke-Command -Session $session -ScriptBlock {{
-                $procmonPath = "C:\\Users\\docker\\Desktop\\procmon\\Procmon.exe";
-                $logFile = "C:\\Users\\docker\\Desktop\\logs\\procmon.pml";
-                if (Test-Path $procmonPath) {{
-                    # Создаём каталог для логов, если его нет
-                    $logDir = Split-Path $logFile;
-                    if (!(Test-Path $logDir)) {{
-                        New-Item -ItemType Directory -Path $logDir -Force;
-                    }}
-                    Start-Process -FilePath $procmonPath -ArgumentList '/AcceptEula', '/Quiet', '/Minimized' -PassThru;
-                }} else {{
-                    Write-Output "Procmon.exe не найден.";
-                }}
-                Start-Sleep -Seconds 5
-                Start-Process -FilePath "C:\\Path\\InsideVM\\{exe_filename}"
-                Start-Sleep -Seconds 70
-                C:\\Users\\docker\\Desktop\\procmon\\Procmon.exe /Terminate
-                $diskNumber = 1
-                $partition = Get-Partition -DiskNumber $diskNumber
-                $mainPartition = ($partition | Where-Object {{ $_.Type -eq "Basic" }})
-                $guid = $mainPartition.Guid
-                $path = "\\\\?\\Volume$($guid)\\"
-                $securePassword = ConvertTo-SecureString -String "12345678" -AsPlainText -Force
-                Unlock-BitLocker -MountPoint "$path\\" -Password $securePassword
-                Copy-Item -Path "C:\\Users\\docker\\Desktop\\logs\\procmon.pml" -Destination "E:\\" -Recurse -Force
-            }};
-            Remove-PSSession $session;
-            """
-            try:
-                result = subprocess.run(
-                    ["powershell", "-Command", setup_and_start_procmon_command],
-                    capture_output=True,
-                    text=True
-                )
-                if result.returncode == 0:
-                    await Logger.analysis_log(result.stdout.strip(), analysis_id, self.db)
-                else:
-                    await Logger.analysis_log(f"Ошибка при выполнении команды Procmon: {result.stderr.strip()}", analysis_id, self.db)
-                    raise subprocess.CalledProcessError(result.returncode, setup_and_start_procmon_command, output=result.stdout, stderr=result.stderr)
-            except subprocess.CalledProcessError as e:
-                await Logger.analysis_log(f"Ошибка при выполнении команды Procmon: {e}", analysis_id, self.db)
-                # Обновляем историю с ошибкой
-                await Logger.update_history_on_error(analysis_id, str(e), self.db)
-                raise
-
-            result_copy = f"""
-                    Remove-VMHardDiskDrive -VMName "{analysis_id}" -ControllerType IDE -ControllerNumber 0 -ControllerLocation 1
-                    $pathdisk = "{hyper}\\temporary_disks\\{analysis_id}.vhdx"
-                    Mount-VHD -Path $pathdisk
-                    $diskNumber = (Get-VHD -Path "$pathdisk").DiskNumber
-                    $partition = Get-Partition -DiskNumber $diskNumber
-                    $mainPartition = ($partition | Where-Object {{ $_.Type -eq "Basic" }})
-                    $guid = $mainPartition.Guid
-                    $path = "\\\\?\\Volume$($guid)\\"
-                    $securePassword = ConvertTo-SecureString -String "12345678" -AsPlainText -Force
-                    Unlock-BitLocker -MountPoint "$path" -Password $securePassword
-                    New-PSDrive -Name "TempDrive" -PSProvider FileSystem -Root "$path"
-                    Copy-Item -Path "TempDrive:\\procmon.pml" -Destination "{hyper}\\results\\{analysis_id}.pml" -Recurse -Force
-                    Remove-PSDrive -Name "TempDrive"
-                    Dismount-VHD -Path $pathdisk
-                    Remove-Item -Path $pathdisk
-                    """
-            
-            subprocess.run(["powershell", "-Command", result_copy], check=True)
-
-            # Остановка виртуальной машины
-            await Logger.analysis_log(f"Остановка виртуальной машины {analysis_id}", analysis_id, self.db)
-            stop_vm_command = f"""
-            Stop-VM -Name "{analysis_id}" -Force
-            Remove-VM -Name "{analysis_id}" -Force
-            """
-            try:
-                subprocess.run(["powershell", "-Command", stop_vm_command], check=True)
-                await Logger.analysis_log("VM остановлена", analysis_id, self.db)
-            except subprocess.CalledProcessError as stop_e:
-                await Logger.analysis_log(f"Ошибка при остановке VM: {stop_e.output.decode().strip()}", analysis_id, self.db)
-
-            # После завершения Procmon пробуем экспортировать лог
-            results_dir = os.path.join("results", analysis_id)
-            pml_file = os.path.join(results_dir, "procmon.pml")
-            await FileOperations.export_procmon_logs(analysis_id, pml_file)
-        except subprocess.CalledProcessError as e:
-            await Logger.analysis_log(f"Ошибка при выполнении команды PowerShell: {str(e)}", analysis_id, self.db)
-            # Остановка виртуальной машины
-            await Logger.analysis_log(f"Остановка виртуальной машины {analysis_id}", analysis_id, self.db)
-            stop_vm_command = f"""
-            Stop-VM -Name "{analysis_id}" -Force
-            Remove-VM -Name "{analysis_id}" -Force
-            """
-            try:
-                subprocess.run(["powershell", "-Command", stop_vm_command], check=True)
-                await Logger.analysis_log("VM остановлена", analysis_id, self.db)
-            except subprocess.CalledProcessError as stop_e:
-                await Logger.analysis_log(f"Ошибка при остановке VM: {stop_e.output.strip()}", analysis_id, self.db)
-            await Logger.analysis_log(f"Ошибка при запуске виртуальной машины: {str(e)}", analysis_id, self.db)
-            await Logger.send_result_to_server(analysis_id, {"status": "error", "message": str(e)})
-            await Logger.update_history_on_error(analysis_id, logs + "\n" + str(e), self.db)
-            FileOperations.delete_vm(analysis_id)
+            print("Остановка ETW...")
+            command = ["powershell", "-command", "xperf -stop"]
+            result = await self.run_in_executor(command)
+            print("ETW успешно остановлен.")    
+            await self.export_result()
         except Exception as e:
-            await Logger.analysis_log(f"Произошла ошибка: {str(e)}", analysis_id, self.db)
-            # Остановка виртуальной машины
-            await Logger.analysis_log(f"Остановка виртуальной машины {analysis_id}", analysis_id, self.db)
-            stop_vm_command = f"""
-            Stop-VM -Name "{analysis_id}" -Force
-            Remove-VM -Name "{analysis_id}" -Force
-            """
-            try:
-                subprocess.run(["powershell", "-Command", stop_vm_command], check=True)
-                await Logger.analysis_log("VM остановлена", analysis_id, self.db)
-            except subprocess.CalledProcessError as stop_e:
-                await Logger.analysis_log(f"Ошибка при остановке VM: {stop_e.output.strip()}", analysis_id, self.db)
-            await Logger.send_result_to_server(analysis_id, {"status": "error", "message": str(e)})
-            await Logger.update_history_on_error(analysis_id, logs + "\n" + str(e), self.db)
-            FileOperations.delete_vm(analysis_id)
+            print(f"Ошибка при остановке ETW: {str(e)}")
+
+    async def export_result(self):
+        print("Экспорт логов ETW...")
+        process = await asyncio.create_subprocess_exec(
+            "powershell", "-command", f"xperf -i {docker}\\{self.analysis_id}\\trace.etl -o {docker}\\{self.analysis_id}\\trace.txt",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await process.communicate()
+
+    async def run_procmon(self):
+        print("Запуск Procmon...")
+        procmon_command = f"""$container_pid = docker ps -q --filter 'ancestor=analysis_1'
+procmon /Backingfile D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docker_log.pml /Filter 'PID is $container_pid Include'
+"""
+        process = await asyncio.create_subprocess_exec(
+            "powershell", "-command", procmon_command,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await process.communicate()
+        print("Procmon успешно запущен.")
+
+    async def stop_procmon(self):
+        try:
+            print("Остановка Procmon...")
+            process = await asyncio.create_subprocess_exec(
+                "powershell", "-command", "procmon /Terminate",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+            print("Procmon успешно остановлен.")
+            await self.export_procmon()
+        except Exception as e:
+            print(f"Ошибка при остановке Procmon: {str(e)}")
+
+    async def export_procmon(self):
+        print("Экспорт логов Procmon...")
+        process = await asyncio.create_subprocess_exec(
+            "powershell", "-command", "procmon /OpenLog D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docker_log.pml /SaveAs D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docker_log.csv",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, stderr = await process.communicate()
+        print("Логи Procmon успешно экспортированы.")
+
+
+    async def get_file_changes(self):
+        print(f"📄 Отслеживание изменений файлов в контейнере analysis_{self.analysis_id}...")
+        command = ["powershell", "-command", f"docker diff analysis_{self.analysis_id}"]
+        result = await self.run_in_executor(command)
+        changes = result.stdout.strip()
+
+        await self.run_in_executor(["powershell", "-command", f"docker stop analysis_{self.analysis_id}"])
+        await self.run_in_executor(["powershell", "-command", f"docker rm analysis_{self.analysis_id}"])
+
+        if changes:
+            print("🔍 Обнаружены изменения в файлах:\n", changes)
+            changes_list = changes.splitlines()
+            changes_output = []
+            for change in changes_list:
+                change_type = change[0]
+                file_path = change[1:].strip()
+                if change_type == 'C':
+                    changes_output.append(f"Изменен: {file_path}")
+                elif change_type == 'A':
+                    changes_output.append(f"Добавлен: {file_path}")
+                elif change_type == 'D':
+                    changes_output.append(f"Удален: {file_path}")
+            await self.lock.acquire()
+            await Logger.save_file_activity(self.analysis_id, changes, self.db)
+            self.lock.release()
+            return changes_output
+        else:
+            print("✅ Файлы не изменялись.")
+            await self.lock.acquire()
+            await Logger.save_file_activity(self.analysis_id, "Файлы не изменялись.", self.db)
+            self.lock.release()
+            return "Файлы не изменялись."
+
+    async def analyze(self):
+            try:   
+                # Получаем сессию из асинхронного генератора
+                async for db in get_db():
+                    self.db = db
+                    break  # Выходим из цикла после получения сессии
+                print(self.db, "asd") 
+                # await self.initialize_db()
+                print("Запуск анализа...")
+                print(self.db, "sfsd")
+                await self.lock.acquire()
+                await Logger.analysis_log("Анализ запущен", self.analysis_id, self.db)
+                self.lock.release()
+                print(123)
+                self.update_dockerfile()
+                self.build_docker()
+                
+                # Запускаем run_docker и run_etw параллельно
+                asyncio.create_task(self.run_docker())
+                asyncio.create_task(self.run_etw())
+                # procmon_task = asyncio.create_task(self.run_procmon())
+                
+
+                # # Ожидаем завершения Procmon
+                # await procmon_task
+                
+                # await self.stop_etw()
+                # await self.export_result()
+                await self.lock.acquire()
+                await Logger.analysis_log("Анализ завершен успешно", self.analysis_id, self.db)
+                self.lock.release()
+            except Exception as e:
+                try:
+                    await self.lock.acquire()
+                    await Logger.update_history_on_error(self.analysis_id, "Анализ завершен с ошибкой", self.db)
+                    self.lock.release()
+                    self.stop_etw()
+                    result = self.get_file_changes()
+                    return result
+                except Exception as e:
+                    await self.lock.acquire() 
+                    await Logger.update_history_on_error(self.analysis_id, e, self.db,)
+                    self.lock.release()

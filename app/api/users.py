@@ -72,16 +72,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 @router.post("/login")
 async def login(User: SignInRequest, response: Response, db: AsyncSession = Depends(get_db)):
     userservice = UserService(db)
-    print(User.email)
     user = await userservice.get_user_by_email(User.email)
+    print(user)
     if not user or not verify_password(User.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
     
     access_token = create_access_token({"sub": str(user.id)})
     refresh_token = create_refresh_token({"sub": str(user.id)})
     # user.refresh_token, uuid = refresh_token
-    user.refresh_token = refresh_token
-    userservice.__commit__()
+    await userservice.update_refresh_token(User.email, refresh_token)
     response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=30*60)
     response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, max_age=7*24*60*60)
 

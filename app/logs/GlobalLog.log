@@ -33,3 +33,189 @@
 2025-03-19 23:23:55.696 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 2c71006e-09ab-4d87-bd25-bd84f3c02510
 2025-03-20 17:29:18.961 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: b63cdf8e-9b41-4d6b-9cb2-652878005427
 2025-03-20 18:30:59.786 | INFO     | app.utils.logging:log:14 - [61454e7c-b20b-4b8d-9f56-cd48a7e4ca06] ⚠️ Ошибка соединения: HTTPConnectionPool(host='192.168.31.153', port=8080): Max retries exceeded with url: /submit-result/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002356C861970>: Failed to establish a new connection: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение'))
+2025-03-22 19:06:17.794 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 3dc19662-9c83-41c2-85ae-5fb507d87c95
+2025-03-22 19:13:13.672 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: f5c3de5d-193b-4498-846a-858f631bf30f
+2025-03-22 19:13:42.507 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 8fdf3bb8-f8b4-4610-9b88-27349004b364
+2025-03-22 19:14:15.691 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 82ea4075-9dc1-4858-9373-c80de25ba9ef
+2025-03-22 19:15:24.054 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'NoneType' object does not support the asynchronous context manager protocol
+2025-03-22 19:16:27.572 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 30a3a2d1-a2dd-4999-bdfd-ca432b726eee
+2025-03-22 19:17:20.320 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 9fd506d9-e30b-49ea-ab83-12fe590ad37b
+2025-03-22 19:18:29.489 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 5ca7ae25-8dfe-43ce-89f6-92e64b503aee
+2025-03-22 19:19:03.062 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: b054d5ce-f62b-4148-8443-caf67a309c1f
+2025-03-22 19:21:26.148 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: 'NoneType' object does not support the asynchronous context manager protocol
+2025-03-22 19:23:17.477 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 50bf0cd9-04c2-4d99-80bf-993652a63085
+2025-03-22 19:24:26.247 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: e1e7c1f8-104a-4a2f-8c30-02baed227f2b
+2025-03-22 19:25:15.975 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 2ebc68c7-fa23-43e4-82a9-7ed58c409cf2
+2025-03-22 19:28:47.071 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 2e6f66b9-7e63-43cf-aa49-d6933790197b
+2025-03-22 19:30:32.473 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 216e87df-9071-4610-b5be-47efead6911d
+2025-03-22 19:30:58.691 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: f94fb898-e4bb-4339-8981-5f3d7a5c271e
+2025-03-22 19:34:53.531 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 8f563c2c-5525-486e-a9d7-7fb3d0abd30c
+2025-03-22 19:38:18.343 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 871deb83-1365-4c75-ae66-7c1d30f93498
+2025-03-22 19:38:49.737 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: a632c7b5-c87b-4810-a5aa-50034280cb1c
+2025-03-22 19:40:07.400 | INFO     | app.utils.logging:log:14 - Ошибка при анализе файла: join() argument must be str, bytes, or os.PathLike object, not 'UUID'
+2025-03-22 19:40:45.607 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: c04fe533-dc30-4ae9-abdf-3d9919a60872
+2025-03-22 19:41:31.841 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 9cc09d63-1ef8-4cc2-bfd0-4766a690323c
+2025-03-22 19:42:16.462 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: aa867fa5-e8a9-4368-ac43-c423dbb1d213
+2025-03-22 19:44:32.328 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 6f204a6a-4dca-4212-b4ef-093ac6ee6a0f
+2025-03-22 19:45:56.012 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 462e4945-df43-4c28-a1bd-2a7326b003b3
+2025-03-22 19:47:09.218 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 2dc08eea-f146-46ab-91f2-c477d6831bab
+2025-03-22 19:59:23.285 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 0e4e4464-55ee-4bbd-b45e-ef14574f4218
+2025-03-22 20:00:22.961 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 42224b5e-2dc0-4969-92aa-a57def5a45d4
+2025-03-22 20:00:36.591 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 1dbf6956-2aa1-455a-9812-c4f7313852d7
+2025-03-22 20:01:33.669 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 793642fa-fa08-42c6-8c16-3597f104eddf
+2025-03-22 20:03:31.985 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 8a5d0efe-108c-4172-8b21-db9630637203
+2025-03-22 20:04:56.139 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: b660b5c7-6419-4e9c-b1d9-89407a41af2b
+2025-03-22 20:05:43.871 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: b5e17c0e-f402-406e-a1e0-4b9825056b90
+2025-03-22 20:08:28.910 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 72e05d35-e89c-4a67-89ea-641860e279ed
+2025-03-22 20:10:40.467 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: e92f98c8-1741-4829-9fd8-68126d5aa617
+2025-03-22 20:14:54.187 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: fe71ae31-8de4-401b-afc2-6827c5a121b5
+2025-03-22 20:37:06.653 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: dedc5960-b87f-4df8-9ad3-8fa0b59eb4d6
+2025-03-22 20:38:10.899 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: 7bf41c62-3975-48b8-85ec-4aab2fabb6e2
+2025-03-22 20:40:07.524 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: b5dfd570-d0ee-4bcb-8be2-b214cf2578b4
+2025-03-22 22:24:00.756 | INFO     | app.utils.logging:log:14 - Файл загружен и анализ запущен. ID анализа: c48ec829-6604-47ac-ad36-45239d41c7e4
+2025-03-23 00:38:00.563 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: object async_generator can't be used in 'await' expression
+2025-03-23 00:40:12.107 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: object async_generator can't be used in 'await' expression
+2025-03-23 00:44:12.170 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: object async_generator can't be used in 'await' expression
+2025-03-23 00:45:08.414 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: object async_generator can't be used in 'await' expression
+2025-03-23 00:45:25.652 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: object async_generator can't be used in 'await' expression
+2025-03-23 00:45:46.962 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: 'NoneType' object has no attribute 'add'
+2025-03-23 00:48:57.375 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: object NoneType can't be used in 'await' expression
+2025-03-23 00:52:13.695 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: 157ec4fe-103f-430e-a8dd-ddbf448183f5
+2025-03-23 00:54:22.539 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: c95a71e5-efca-4e7f-8085-27fef308dc64
+2025-03-23 01:33:50.040 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: db35e54e-5bb6-4fd1-86d9-dbb7aabca9da
+2025-03-23 01:35:37.712 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: c3128560-7571-4c3b-8f47-c72fc6ab0917
+2025-03-23 01:37:11.026 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: ff395443-2fc5-4836-ae4b-13e224c89e3a
+2025-03-23 01:38:12.734 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: 759fb5d0-d3ff-4fe3-a910-1a96ad3f86eb
+2025-03-23 01:39:09.925 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: ad2aa74a-1184-4690-bfba-4d29fa0a2862
+2025-03-23 01:40:18.518 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: 882b0cbd-24eb-4d27-8dee-e331e8223017
+2025-03-23 01:41:09.572 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: __init__() should return None, not 'coroutine'
+2025-03-23 01:42:42.000 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: 2210c22c-9a82-4f8b-8498-f3cbdc719b19
+2025-03-23 01:43:10.373 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: af53fc80-d274-4e0a-8f44-ca496da1fc0f
+2025-03-23 01:44:38.216 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: object async_generator can't be used in 'await' expression
+2025-03-23 01:45:39.642 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: d3c4a63e-6812-457d-905f-deac0e27d827
+2025-03-23 01:48:52.132 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: 7789c95a-14fa-4721-a1e1-1b4b55921189
+2025-03-23 01:49:46.545 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: a8c2f86b-9122-4617-9cfa-63f4b2fa4fc4
+2025-03-23 01:50:25.445 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: b4e83d0c-9e73-403c-9df4-d732109b5dc1
+2025-03-23 01:51:08.233 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: 0d59325d-1099-489e-b7fd-9c2acbafccf0
+2025-03-23 01:52:26.775 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: 'async_generator' object has no attribute 'get_db'
+2025-03-23 01:54:00.011 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: __init__() should return None, not 'coroutine'
+2025-03-23 01:54:50.159 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: object async_generator can't be used in 'await' expression
+2025-03-23 01:55:18.309 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: 8e023a26-bd90-47a0-90db-b08c4284b055
+2025-03-23 02:17:53.077 | INFO     | app.utils.logging:log:15 - Ошибка при анализе файла: __init__() should return None, not 'coroutine'
+2025-03-23 02:18:29.562 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: 89bd58ec-807d-4ad0-8908-e63217220b9f
+2025-03-23 02:20:10.726 | INFO     | app.utils.logging:log:15 - Файл загружен и анализ запущен. ID анализа: f726e8b6-6800-485d-8c00-c4938ebf8f74
+2025-03-23 02:22:51.054 | INFO     | app.utils.logging:log:17 - Файл загружен и анализ запущен. ID анализа: fcd4b82f-44cd-4455-8ec5-1f73210399a3
+2025-03-23 13:17:06.719 | INFO     | app.utils.logging:log:17 - Ошибка при анализе файла: 'AnalysisService' object has no attribute 'initialize_db'
+2025-03-23 13:17:37.692 | INFO     | app.utils.logging:log:17 - Файл загружен и анализ запущен. ID анализа: 88f9ff5e-c509-4c39-93a6-1adab8c58be3
+2025-03-23 13:18:09.784 | INFO     | app.utils.logging:log:17 - Файл загружен и анализ запущен. ID анализа: fb8e848e-ffe2-4f23-b23c-e8ddb2bbd35e
+2025-03-23 13:20:11.507 | INFO     | app.utils.logging:log:17 - Файл загружен и анализ запущен. ID анализа: 8f0b174f-c8a5-4817-8438-39ced84927e8
+2025-03-23 13:21:26.372 | INFO     | app.utils.logging:log:17 - Файл загружен и анализ запущен. ID анализа: 396389b6-e335-46e2-8b6e-7687a6992952
+2025-03-23 13:22:45.487 | INFO     | app.utils.logging:log:17 - Файл загружен и анализ запущен. ID анализа: f32b904a-45e2-4986-958d-d58b6b5e5004
+2025-03-23 13:24:09.747 | INFO     | app.utils.logging:log:17 - Файл загружен и анализ запущен. ID анализа: c22fa98e-246e-4da0-9cb0-a3236ac58121
+2025-03-23 13:30:23.403 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: e6e5c5c5-d66d-4fcb-8f35-e47b8179d76f
+2025-03-23 13:31:28.951 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: 6c23cc5c-6d48-4c83-82cb-2fada6dbc07d
+2025-03-23 13:33:07.385 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: 35541a7a-27d2-4a3f-9ba8-e4fd7bfd89ae
+2025-03-23 13:34:37.259 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: a3d812ac-f692-482d-ae09-9c99bbfce83c
+2025-03-23 13:36:27.062 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: 196a1383-a8be-4af2-97da-5fe6960c8ace
+2025-03-23 14:00:13.953 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: c478154a-4518-4c85-8c2b-32e1f2275414
+2025-03-23 14:01:22.997 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: a3dfe3af-6d63-4e82-9388-745517969c9a
+2025-03-23 14:06:51.971 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: dbf4c957-2326-4b5b-b8a6-8736d29aa789
+2025-03-23 14:09:50.210 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: e0a9eb51-36de-49e5-8f41-ed6112ac5e73
+2025-03-23 14:11:20.453 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: 0449831a-99b1-428b-bf9f-9ba25ce9cfc5
+2025-03-23 14:48:16.803 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: 36f9a0b4-176b-4850-bee1-a250508f144b
+2025-03-23 14:50:00.221 | INFO     | app.utils.logging:log:18 - Файл загружен и анализ запущен. ID анализа: eb6e08a5-162b-4545-8c02-eaa59289253e
+2025-03-23 15:04:46.719 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: 2d9725af-b1ac-4de5-aa40-1c1b3bfc2ba9
+2025-03-23 15:05:31.420 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: 8d9e6383-a0de-4ccc-a19b-5964ff0d7e55
+2025-03-23 15:16:29.580 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: 421cd179-035e-4673-b3d7-255f43f35b5e
+2025-03-23 15:17:47.579 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: 89e6c5a7-8e0b-4ff5-b3b2-821b344ed50e
+2025-03-23 15:24:52.535 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: 8eba3e15-b9b4-4de6-b750-1d6fa3e51df4
+2025-03-23 15:27:46.504 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: 68f7ba3d-0ddc-462a-8e39-af513b7a230c
+2025-03-23 15:29:24.732 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: d8616244-1ced-4361-a18f-6a609b58578c
+2025-03-23 15:30:15.261 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: bf4b1342-16fc-44c3-8222-9d199806e609
+2025-03-23 15:31:12.727 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: 0d724974-1831-4202-906d-863a6d554f8c
+2025-03-23 15:32:22.700 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: e5d029e7-a5b7-475e-89f5-185367fbaa4d
+2025-03-23 15:47:55.054 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: 2f979c8a-3007-4868-b8f0-e7153d489253
+2025-03-23 17:17:12.149 | INFO     | app.utils.logging:log:19 - Файл загружен и анализ запущен. ID анализа: c9e7fc33-9ce9-4ae5-9813-774d9fd15435
+2025-03-23 17:30:11.542 | INFO     | app.utils.logging:log:19 - Ошибка при получении страницы анализа: context must include a "request" key
+2025-03-23 17:31:10.117 | INFO     | app.utils.logging:log:19 - Ошибка при получении страницы анализа: context must include a "request" key
+2025-03-23 17:52:50.635 | INFO     | app.utils.logging:log:19 - Ошибка при получении страницы анализа: 'name'
+2025-03-23 18:26:44.360 | INFO     | app.utils.logging:log:19 - Ошибка при получении страницы анализа: 'analisys.html' not found in search path: 'app/templates'
+2025-03-23 18:26:55.854 | INFO     | app.utils.logging:log:19 - Ошибка при получении страницы анализа: 'analisys.html' not found in search path: 'app/templates'
+2025-03-23 18:33:49.993 | INFO     | app.utils.logging:log:19 - Ошибка при получении страницы анализа: 'analisys.html' not found in search path: 'app/templates'
+2025-03-23 18:36:44.530 | INFO     | app.utils.logging:log:19 - Ошибка при получении страницы анализа: 'analisys.html' not found in search path: 'app/templates'
+2025-03-23 18:43:35.191 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:35.195 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:43:38.219 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:38.221 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:43:41.244 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:41.246 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:43:44.259 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:44.261 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:43:47.282 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:47.284 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:43:50.309 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:50.312 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:43:53.330 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:53.331 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:43:56.341 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:56.342 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:43:59.352 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:43:59.353 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:02.364 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:02.366 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:05.385 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:05.386 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:08.405 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:08.406 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:11.425 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:11.426 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:14.434 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:14.435 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:17.457 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:17.458 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:20.476 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:20.477 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:23.493 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:23.495 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:26.519 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:26.519 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:29.533 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:29.534 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:32.551 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:32.553 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:35.566 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:35.567 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:38.585 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:38.586 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:41.595 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:41.596 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:44.614 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:44.615 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:47.626 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:47.627 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:50.647 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:50.648 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:53.664 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:53.665 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:56.684 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:56.685 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:44:59.704 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:44:59.705 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:02.724 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:02.725 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:05.742 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:05.742 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:08.766 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:08.766 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:11.778 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:11.779 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:14.786 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:14.787 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:17.798 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:17.800 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:20.825 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:20.826 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:23.842 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:23.844 | INFO     | app.utils.logging:log:19 - Event generator started
+2025-03-23 18:45:26.852 | INFO     | app.utils.logging:log:19 - SSE endpoint called
+2025-03-23 18:45:26.853 | INFO     | app.utils.logging:log:19 - Event generator started

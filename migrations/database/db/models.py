@@ -3,6 +3,9 @@ from sqlalchemy import Column, Integer, String, VARCHAR, Boolean, DateTime, JSON
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from migrations.database.db.schemas import Base
+import asyncio
+import subprocess
+from concurrent.futures import ThreadPoolExecutor
 
 class Analysis(Base):
     __tablename__ = "analysis"
@@ -24,9 +27,9 @@ class Results(Base):
     __tablename__ = "results"
 
     analysis_id = Column(UUID(as_uuid=True), ForeignKey('analysis.analysis_id', ondelete="CASCADE"), primary_key=True)
-    file_activity = Column(JSONB, index=True)
-    docker_output = Column(String, index=True)
-    results = Column(String, index=True)
+    file_activity = Column(String)
+    docker_output = Column(String)
+    results = Column(String)
 
     # Связь для удобного обращения к анализу из результата
     analysis = relationship("Analysis", back_populates="result")

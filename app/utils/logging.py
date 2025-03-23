@@ -3,7 +3,12 @@ import os
 import requests
 from loguru import logger
 from app.repositories.file_repository import FileRepository
+from migrations.database.db.models import Results, Analysis
+from sqlalchemy import select
+import uuid
+from app.services.db_service import AnalysisDbService
 # from app.auth.auth import uuid_by_token
+from sqlalchemy.ext import asyncio
 
 class Logger:
     # Добавляем лог в файл только один раз при старте
@@ -16,17 +21,36 @@ class Logger:
 
     @staticmethod
     async def analysis_log(msg, analysis_id, db):
-        result = await db.get_result(analysis_id)
-        print(result)
+        result = await AnalysisDbService().get_result(analysis_id, db)
         if result:
             result.docker_output += msg + "\n"
             await db.commit()
-        return None
+        return 
+    
+    @staticmethod
+    async def save_result(analysis_id, result_data, db):
+        print(result_data)
+        result = await AnalysisDbService().get_result(analysis_id, db)
+        if result:
+            print(result)
+            result.results = result_data
+            await db.commit()
+        return 
+    
+    @staticmethod
+    async def save_file_activity(analysis_id, history, db):
+        result = await AnalysisDbService().get_result(analysis_id, db)
+        analysis = await AnalysisDbService().get_analysis(analysis_id, db)
+        if result:
+            analysis.status = "completed"
+            result.file_activity = history
+            await db.commit()
+        return
 
     @staticmethod
     async def update_history_on_error(analysis_id, error_message, db):
-        result = await db.get_result(analysis_id)
-        analysis = await db.ger_analysis(analysis_id)
+        result = await AnalysisDbService().get_result(analysis_id, db)
+        analysis = await AnalysisDbService().get_analysis(analysis_id, db)
         if analysis and result:
             analysis.status = "error"
             result.docker_output = error_message

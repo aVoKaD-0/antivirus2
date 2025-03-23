@@ -9,10 +9,10 @@ class Users(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String, unique=True, index=True)
-    hashed_password = Column(VARCHAR(255), index=True)
+    hashed_password = Column(VARCHAR(255))
     confirmed = Column(Boolean, default=False)
     confiration_code = Column(String, nullable=True)
-    refresh_token = Column(String, nullable=True)
+    refresh_token = Column(String, nullable=True, index=True)
 
     # Связь для удобного обращения к анализам пользователя
     analyses = relationship("Analysis", back_populates="user", cascade="all, delete-orphan")

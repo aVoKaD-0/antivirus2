@@ -12,7 +12,7 @@ from fastapi import Request
 import subprocess
 import csv
 from app.utils.logging import Logger
-from app.infrastructure.repositories.analysis import hyper
+from app.infrastructure.repositories.analysis import docker
 from app.services.db_service import AnalysisDbService
 from migrations.database.db.models import Analysis, Results
 from sqlalchemy.sql import func, text, select
@@ -25,7 +25,7 @@ project_dir = os.getcwd()[:os.getcwd().index("antivirus")].replace('\\', '\\')+"
 class FileOperations:
     @staticmethod
     def user_upload(email):
-        upload_path = os.path.join(hyper, "files", email)
+        upload_path = os.path.join(docker, email)
         os.makedirs(upload_path, exist_ok=True)
         return upload_path  # Возвращаем путь к директории
 
@@ -42,15 +42,12 @@ class FileOperations:
         return uuid.uuid4()
     
     @staticmethod
-    async def get_user_analyses(user_id: str):
-        db_service = AnalysisDbService()
-        return await db_service.get_user_analyses(user_id)
-    
-    @staticmethod
     async def get_analysis_details(analysis_id: str):
         db_service = AnalysisDbService()
+        # await db_service.get_db()
         return await db_service.get_result(analysis_id)
     
+    # дубль с user_service
     @staticmethod
     async def get_chunk_result(analysis_id: str, offset: int = 0, limit: int = 50):
         db_service = AnalysisDbService()
@@ -88,9 +85,12 @@ class FileOperations:
     #         ip = request.client.host
     #     return ip 
 
+
+    # дубль с db_service
     @staticmethod
     async def create_analysis(user_id: str, filename: str, timestamp: str, status: str, analysis_id: uuid.UUID):
         db_service = AnalysisDbService()
+        # await db_service.get_db()
         analysis = Analysis(
             user_id=user_id, 
             filename=filename, 
@@ -100,9 +100,12 @@ class FileOperations:
         )
         return await db_service.add(analysis)
     
+
+    # дубль с db_service
     @staticmethod
     async def create_result(analysis_id: uuid.UUID, file_activity: str, docker_output: str, results: str):
         db_service = AnalysisDbService()
+        # await db_service.get_db()
         result = Results(
             analysis_id=analysis_id, 
             file_activity=file_activity, 
@@ -111,6 +114,8 @@ class FileOperations:
         )
         return await db_service.add(result)
     
+
+    # дубль с user_service
     @staticmethod
     async def get_result_data(analysis_id: str) -> dict:
         db_service = AnalysisDbService()
@@ -143,6 +148,7 @@ class FileOperations:
     @staticmethod
     async def save_result(analysis_id: str, file_activity: str):
         db_service = AnalysisDbService()
+        # await db_service.get_db()
         await db_service.save_activity(analysis_id, file_activity)
 
     def delete_vm(analysis_id):

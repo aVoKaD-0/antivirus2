@@ -167,9 +167,10 @@ document.addEventListener('DOMContentLoaded', function() {
     async function showResults(analysisId) {
         console.log("Показываем результаты анализа:", analysisId);
         try {
-            const response = await fetch(`/results/${analysisId}`, {
+            const response = await fetch(`/analysis/results/${analysisId}`, {
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {}
             });
+            console.log("Запрос отправлен")
             if (!response.ok) {
                 console.log("Ошибка при получении результатов анализа:", response.status);
                 if (response.status === 404) {
@@ -183,13 +184,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const data = await response.json();
             console.log("Получены результаты:", data);
-            if (data.file_activity) {
-                console.log("Количество элементов file_activity:", data.file_activity.length);
+    
+            // Обработка file_activity как строки
+            console.log("Обработка file_activity как строки");
+            if (typeof data.file_activity === 'string' && data.file_activity.length > 0) {
+                document.getElementById('fileActivityContent').textContent = data.file_activity;
             } else {
-                console.log("Поле file_activity отсутствует в полученных данных.");
+                document.getElementById('fileActivityContent').textContent = 'Нет данных по файловой активности.';
             }
-            updateStatus(window.analysisStatus || "running");
 
+            console.log("Обработка docker_output как строки");
+    
             // Обновляем логи Docker
             if (data.docker_output) {
                 dockerOutputContent.textContent = data.docker_output;
@@ -198,23 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const dockerLoader = document.getElementById('dockerOutputLoader');
             if (dockerLoader) dockerLoader.style.display = 'none';
-
-            if (Array.isArray(data.file_activity) && data.file_activity.length > 0) {
-                const preview = JSON.stringify(data.file_activity, null, 4);
-                document.getElementById('fileActivityContent').textContent = preview;
-                fileActivityTotal = data.total;
-                fileActivityOffset = data.file_activity.length;
-                if (fileActivityTotal > fileActivityOffset) {
-                    updateLoadMoreButton(analysisId);
-                }
-                const remaining = fileActivityTotal - fileActivityOffset;
-                const remainingSpan = document.getElementById('remainingCount');
-                if (remainingSpan) {
-                    remainingSpan.textContent = "Осталось элементов: " + remaining;
-                }
-            } else {
-                document.getElementById('fileActivityContent').textContent = 'Нет данных по файловой активности.';
-            }
+    
             const loader = document.getElementById('fileActivityLoader');
             if (loader) loader.style.display = 'none';
         } catch (error) {
@@ -229,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Вспомогательная функция для получения данных и обновления страницы
         async function fetchResultsAndUpdate(analysisId) {
             try {
-                const response = await fetch(`/results/${analysisId}`, {
+                const response = await fetch(`analysis/results/${analysisId}`, {
                     headers: token ? { 'Authorization': `Bearer ${token}` } : {}
                 });
                 if (!response.ok) {
@@ -257,10 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (dockerLoader) dockerLoader.style.display = 'none';
  
                 if (Array.isArray(data.file_activity) && data.file_activity.length > 0) {
-                    // Форматируем данные с помощью JSON.stringify с отступом для красивого отображения
-                    const preview = JSON.stringify(data.file_activity, null, 4);
-                    // Используем innerHTML с заменой символов новой строки на <br/> для форматирования
-                    document.getElementById('fileActivityContent').innerHTML = preview.replace(/\n/g, '<br/>');
                     fileActivityTotal = data.total;
                     fileActivityOffset = data.file_activity.length;
                     // Добавляем кнопки, если еще остались данные для подгрузки
@@ -291,6 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обновление статуса анализа
     function updateStatus(status) {
         const statusElement = document.getElementById('analysisStatus');
+        console.log("Обновление статуса анализа:", status);
         statusElement.textContent = `Статус: ${status}`;
         if (status === 'completed') {
             statusElement.style.color = 'var(--success-color)';
@@ -308,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadNextChunk(analysisId, limitOverride) {
         try {
             const limit = limitOverride !== undefined ? limitOverride : FILE_ACTIVITY_LIMIT;
-            const response = await fetch(`/results/${analysisId}/chunk?offset=${fileActivityOffset}&limit=${limit}`, {
+            const response = await fetch(`analysis/results/${analysisId}/chunk?offset=${fileActivityOffset}&limit=${limit}`, {
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {}
             });
             if (!response.ok) {
@@ -329,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Функция для скачивания полного результата (переход на страницу скачивания)
     function downloadFullFile(analysisId) {
-        window.location.assign(`/download/${analysisId}`);
+        window.location.assign(`analysis/download/${analysisId}`);
     }
 
     // Функция для добавления кнопок загрузки оставшихся данных
@@ -411,18 +397,18 @@ document.addEventListener('DOMContentLoaded', function() {
     //     }
     // }
 
-    // Устанавливаем соединение с SSE эндпоинтом для обновлений
-    const evtSource = new EventSource("/sse");
-    evtSource.onmessage = function(event) {
-        console.log("Получено SSE событие обновления:", event.data);
-        try {
-            const data = JSON.parse(event.data);
-            // Если сообщение содержит поле 'redirect', перенаправляем пользователя
-            if (data.redirect) {
-                window.location.href = data.redirect;
-            }
-        } catch (e) {
-            console.error("Ошибка обработки SSE события:", e);
-        }
-    };
+    // // Устанавливаем соединение с SSE эндпоинтом для обновлений
+    // const evtSource = new EventSource("/sse");
+    // evtSource.onmessage = function(event) {
+    //     console.log("Получено SSE событие обновления:", event.data);
+    //     try {
+    //         const data = JSON.parse(event.data);
+    //         // Если сообщение содержит поле 'redirect', перенаправляем пользователя
+    //         if (data.redirect) {
+    //             window.location.href = data.redirect;
+    //         }
+    //     } catch (e) {
+    //         console.error("Ошибка обработки SSE события:", e);
+    //     }
+    // };
 });
