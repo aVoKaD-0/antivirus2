@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/github.min.css">
     <link rel="stylesheet" href="/static/analysis.css">
 </head>
+<style>
+#logoutBtnProfile, #changePasswordBtn {
+    position: absolute;
+    right: 0;
+    display: none;
+    z-index: 10;
+    margin-top: 10px; /* Отступ между кнопками */
+}
+
+#logoutBtn {
+    top: 50px; /* Расположение кнопки "Выйти" */
+}
+
+#changePasswordBtn {
+    top: 120px; /* Расположение кнопки "Сменить пароль" */
+}
+</style>
 <body>
     {% if analysis_id %}
     <script>
