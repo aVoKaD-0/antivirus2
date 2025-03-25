@@ -1,5 +1,5 @@
-from pydantic import BaseModel
 import uuid
+from pydantic import BaseModel
 
 
 class AnalysisRequest(BaseModel):

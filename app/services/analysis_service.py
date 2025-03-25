@@ -1,17 +1,12 @@
-from app.repositories.file_repository import FileRepository
-from app.utils.file_operations import FileOperations
-from app.utils.logging import Logger
 import os
-import subprocess
-import time
-from app.infrastructure.repositories.analysis import docker, docker2
-from app.services.db_service import AnalysisDbService
-from sqlalchemy.ext.asyncio import AsyncSession
+import json
 import asyncio
-from app.domain.models.database import get_db
+import subprocess
+from app.utils.logging import Logger
+from app.utils.websocket_manager import manager
 from concurrent.futures import ThreadPoolExecutor
+from app.infrastructure.repositories.analysis import docker
 
-# Получение учетных данных пользователя
 username = "docker"
 password = "docker"
 
@@ -21,12 +16,11 @@ class AnalysisService:
         self.uuid = uuid
         self.filename = filename
         self.analysis_id = analysis_id 
-        self.lock = asyncio.Lock()  # Создаем объект Lock
+        self.lock = asyncio.Lock() 
 
 
     def update_dockerfile(self):
         file = self.filename[:-4]
-        print(file)
         dockerfile_content = f"""FROM mcr.microsoft.com/windows/servercore:ltsc2022
 WORKDIR C:\\\\sandbox
 COPY {self.filename} .
@@ -40,8 +34,8 @@ CMD ["powershell", "-command", "Start-Process -FilePath 'C:\\\\sandbox\\\\{self.
         with open(f"{docker}\\{self.analysis_id}\\Dockerfile", 'w') as dockerfile:
             dockerfile.write(dockerfile_content)
 
-    def build_docker(self):
-        print("Сборка Docker-образа...")
+    async def build_docker(self):
+        await Logger.analysis_log("Сборка Docker-образа...", self.analysis_id)
         subprocess.run(["powershell", "-command", f"docker build -t analysis_{self.analysis_id} -f {docker}\\{self.analysis_id}\\Dockerfile {docker}\\{self.analysis_id}\\"], check=True)
 
     async def run_in_executor(self, command):
@@ -54,16 +48,16 @@ CMD ["powershell", "-command", "Start-Process -FilePath 'C:\\\\sandbox\\\\{self.
         return result
 
     async def run_docker(self):
-        print("Запуск контейнера...")
+        await Logger.analysis_log("Запуск контейнера...", self.analysis_id)
         command = ["powershell", "-command", f"docker run -it --isolation=process --name analysis_{self.analysis_id} analysis_{self.analysis_id}"]
         result = await self.run_in_executor(command)
-        print("Контейнер успешно завершил работу.")
-        await self.stop_etw()  # После завершения контейнера останавливаем ETW
+        await Logger.analysis_log("Контейнер успешно завершил работу.", self.analysis_id)
+        await self.stop_etw() 
         await self.get_file_changes()
         return
 
     async def get_docker_output(self):
-        print("Получение логов...")
+        await Logger.analysis_log("Получение логов...", self.analysis_id)
         process = await asyncio.create_subprocess_exec(
             "powershell", "-command", f"docker logs analysis_{self.analysis_id}",
             stdout=asyncio.subprocess.PIPE,
@@ -72,24 +66,24 @@ CMD ["powershell", "-command", "Start-Process -FilePath 'C:\\\\sandbox\\\\{self.
         stdout, stderr = await process.communicate()
 
     async def run_etw(self):
-        print("Запуск ETW для мониторинга файлов...")
+        await Logger.analysis_log("Запуск ETW для мониторинга файлов...", self.analysis_id)
         await asyncio.sleep(7)
         etw_command = ["powershell", "-command", f"xperf -on PROC_THREAD+LOADER+FILE_IO -f {docker}\\{self.analysis_id}\\trace.etl"]
         result = await self.run_in_executor(etw_command)
-        print("ETW успешно запущен.")
+        await Logger.analysis_log("ETW успешно запущен.", self.analysis_id)
 
     async def stop_etw(self):
         try:
-            print("Остановка ETW...")
+            await Logger.analysis_log("Остановка ETW...", self.analysis_id)
             command = ["powershell", "-command", "xperf -stop"]
             result = await self.run_in_executor(command)
-            print("ETW успешно остановлен.")    
+            await Logger.analysis_log("ETW успешно остановлен.", self.analysis_id)    
             await self.export_result()
         except Exception as e:
-            print(f"Ошибка при остановке ETW: {str(e)}")
+            await Logger.analysis_log(f"Ошибка при остановке ETW: {str(e)}", self.analysis_id)
 
     async def export_result(self):
-        print("Экспорт логов ETW...")
+        await Logger.analysis_log("Экспорт логов ETW...", self.analysis_id)
         process = await asyncio.create_subprocess_exec(
             "powershell", "-command", f"xperf -i {docker}\\{self.analysis_id}\\trace.etl -o {docker}\\{self.analysis_id}\\trace.txt",
             stdout=asyncio.subprocess.PIPE,
@@ -98,7 +92,7 @@ CMD ["powershell", "-command", "Start-Process -FilePath 'C:\\\\sandbox\\\\{self.
         stdout, stderr = await process.communicate()
 
     async def run_procmon(self):
-        print("Запуск Procmon...")
+        await Logger.analysis_log("Запуск Procmon...", self.analysis_id)
         procmon_command = f"""$container_pid = docker ps -q --filter 'ancestor=analysis_1'
 procmon /Backingfile D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docker_log.pml /Filter 'PID is $container_pid Include'
 """
@@ -108,35 +102,35 @@ procmon /Backingfile D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docke
             stderr=asyncio.subprocess.PIPE
         )
         stdout, stderr = await process.communicate()
-        print("Procmon успешно запущен.")
+        await Logger.analysis_log("Procmon успешно запущен.", self.analysis_id)
 
     async def stop_procmon(self):
         try:
-            print("Остановка Procmon...")
+            await Logger.analysis_log("Остановка Procmon...", self.analysis_id)
             process = await asyncio.create_subprocess_exec(
                 "powershell", "-command", "procmon /Terminate",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )
             stdout, stderr = await process.communicate()
-            print("Procmon успешно остановлен.")
+            await Logger.analysis_log("Procmon успешно остановлен.", self.analysis_id)
             await self.export_procmon()
         except Exception as e:
-            print(f"Ошибка при остановке Procmon: {str(e)}")
+            await Logger.analysis_log(f"Ошибка при остановке Procmon: {str(e)}", self.analysis_id)
 
     async def export_procmon(self):
-        print("Экспорт логов Procmon...")
+        await Logger.analysis_log("Экспорт логов Procmon...", self.analysis_id)
         process = await asyncio.create_subprocess_exec(
             "powershell", "-command", "procmon /OpenLog D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docker_log.pml /SaveAs D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docker_log.csv",
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
         stdout, stderr = await process.communicate()
-        print("Логи Procmon успешно экспортированы.")
+        await Logger.analysis_log("Логи Procmon успешно экспортированы.", self.analysis_id)
 
 
     async def get_file_changes(self):
-        print(f"📄 Отслеживание изменений файлов в контейнере analysis_{self.analysis_id}...")
+        await Logger.analysis_log(f"📄 Отслеживание изменений файлов в контейнере analysis_{self.analysis_id}...", self.analysis_id)
         command = ["powershell", "-command", f"docker diff analysis_{self.analysis_id}"]
         result = await self.run_in_executor(command)
         changes = result.stdout.strip()
@@ -145,7 +139,7 @@ procmon /Backingfile D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docke
         await self.run_in_executor(["powershell", "-command", f"docker rm analysis_{self.analysis_id}"])
 
         if changes:
-            print("🔍 Обнаружены изменения в файлах:\n", changes)
+            await Logger.analysis_log("🔍 Обнаружены изменения в файлах:\n", self.analysis_id)
             changes_list = changes.splitlines()
             changes_output = []
             for change in changes_list:
@@ -158,56 +152,38 @@ procmon /Backingfile D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\1\\docke
                 elif change_type == 'D':
                     changes_output.append(f"Удален: {file_path}")
             await self.lock.acquire()
-            await Logger.save_file_activity(self.analysis_id, changes, self.db)
+            await Logger.save_file_activity(self.analysis_id, changes)
+            await Logger.analysis_log("Анализ завершен успешно", self.analysis_id)
             self.lock.release()
-            return changes_output
+            await manager.send_message(self.analysis_id, json.dumps({"status": "completed", "message": "🔍 Обнаружены изменения в файлах"}))
+            return 
         else:
-            print("✅ Файлы не изменялись.")
+            Logger.analysis_log("✅ Файлы не изменялись.")
             await self.lock.acquire()
-            await Logger.save_file_activity(self.analysis_id, "Файлы не изменялись.", self.db)
+            await Logger.save_file_activity(self.analysis_id, "Файлы не изменялись.")
+            await Logger.analysis_log("Анализ завершен успешно", self.analysis_id)
             self.lock.release()
             return "Файлы не изменялись."
 
     async def analyze(self):
-            try:   
-                # Получаем сессию из асинхронного генератора
-                async for db in get_db():
-                    self.db = db
-                    break  # Выходим из цикла после получения сессии
-                print(self.db, "asd") 
-                # await self.initialize_db()
-                print("Запуск анализа...")
-                print(self.db, "sfsd")
+            try:  
                 await self.lock.acquire()
-                await Logger.analysis_log("Анализ запущен", self.analysis_id, self.db)
+                await Logger.analysis_log("Анализ запущен", self.analysis_id)
                 self.lock.release()
-                print(123)
                 self.update_dockerfile()
                 self.build_docker()
                 
-                # Запускаем run_docker и run_etw параллельно
                 asyncio.create_task(self.run_docker())
                 asyncio.create_task(self.run_etw())
-                # procmon_task = asyncio.create_task(self.run_procmon())
-                
-
-                # # Ожидаем завершения Procmon
-                # await procmon_task
-                
-                # await self.stop_etw()
-                # await self.export_result()
-                await self.lock.acquire()
-                await Logger.analysis_log("Анализ завершен успешно", self.analysis_id, self.db)
-                self.lock.release()
             except Exception as e:
                 try:
                     await self.lock.acquire()
-                    await Logger.update_history_on_error(self.analysis_id, "Анализ завершен с ошибкой", self.db)
+                    await Logger.update_history_on_error(self.analysis_id, "Анализ завершен с ошибкой")
                     self.lock.release()
                     self.stop_etw()
                     result = self.get_file_changes()
                     return result
                 except Exception as e:
                     await self.lock.acquire() 
-                    await Logger.update_history_on_error(self.analysis_id, e, self.db,)
+                    await Logger.update_history_on_error(self.analysis_id, e)
                     self.lock.release()

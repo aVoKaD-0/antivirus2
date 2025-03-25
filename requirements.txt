@@ -16,3 +16,4 @@ fastapi_mail
 pyotp
 captcha
 bcrypt
+apscheduler

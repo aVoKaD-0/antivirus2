@@ -1,7 +1,5 @@
 import asyncio
 from app.services.analysis_service import AnalysisService
-from app.utils.file_operations import FileOperations
-# import asyncio
 
 async def test_analysis_service():
     analysis_service = AnalysisService()

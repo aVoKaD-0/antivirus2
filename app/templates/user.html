@@ -7,6 +7,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/user.css">
 </head>
+<style>
+    .password-container {
+        position: relative;
+    }
+    
+    .eye-button {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+</style>
 <body>
     <div class="container mt-4">
         <h1 id="pageTitle" class="text-center mb-4">Регистрация</h1>
@@ -25,9 +41,13 @@
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Пароль</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="password-container">
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <button type="button" class="eye-button" onclick="togglePassword('password', this)">👁</button>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+                <div class="message" id="message"></div>
             </form>
         </div>
 
@@ -40,9 +60,15 @@
                 </div>
                 <div class="mb-3">
                     <label for="loginPassword" class="form-label">Пароль</label>
-                    <input type="password" class="form-control" id="loginPassword" name="password" required>
+                    <div class="password-container">
+                        <input type="password" class="form-control" id="loginPassword" name="password" required>
+                        <button type="button" class="eye-button" onclick="togglePassword('loginPassword', this)">👁</button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-success">Войти</button>
+                <div class="d-flex justify-content-between align-items-center">
+                    <button type="submit" class="btn btn-success">Войти</button>
+                    <a href="/users/reset-password" class="text-decoration-none">Забыли пароль?</a>
+                </div>
             </form>
         </div>
     </div>
@@ -50,7 +76,7 @@
     <div id="loadingIcon" style="display: none;">
         <div class="spinner"></div>
     </div>
-    <script>
+    <!-- <script>
         // Функция для смены заголовка
         function changeTitle(title) {
             document.title = title;
@@ -68,7 +94,7 @@
             document.getElementById('loginForm').style.display = 'block';
             changeTitle('Вход');
         });
-    </script>
+    </script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/static/user.js?v=1.0"></script>
 </body>

@@ -20,7 +20,6 @@ class FileRepository:
             if os.path.exists(results_file):
                 with open(results_file, "r", encoding="utf-8") as file:
                     return json.load(file)
-            # Если файла нет, возвращаем объект с нужной структурой по умолчанию.
             return {"file_activity": [], "docker_output": ""}
 
     def save_results(results, analysis_id: str):

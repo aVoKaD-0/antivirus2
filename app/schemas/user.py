@@ -1,5 +1,5 @@
-from pydantic import BaseModel
 from pydantic import EmailStr
+from pydantic import BaseModel
 
 class SingUpRequest(BaseModel):
     email: str
@@ -35,3 +35,10 @@ class UserDeleteResponse(BaseModel):
 
 class EmailConfirmation(BaseModel):
     code: str
+
+class ResetPasswordRequest(BaseModel):
+    password: str
+    email: str = None
+
+class ResetPasswordResponse(BaseModel):
+    status: bool

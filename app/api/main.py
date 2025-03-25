@@ -1,8 +1,8 @@
+from fastapi import Request
 from fastapi import APIRouter
+from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
-from fastapi import Request
 
 
 router = APIRouter(prefix="/main", tags=["main"])

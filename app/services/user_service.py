@@ -1,11 +1,13 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+import uuid
+from datetime import datetime, timedelta    
+from sqlalchemy import select
+from sqlalchemy.sql import text
+from app.auth.auth import generate_code
 from app.domain.models.user import Users
 from app.core.security import get_password_hash
-from sqlalchemy import select
-from app.auth.auth import generate_code
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.utils.sse_operations import subscribers
 from migrations.database.db.models import Results, Analysis
-from sqlalchemy.sql import text
-import uuid
 
 class UserService:
     def __init__(self, db: AsyncSession):
@@ -19,8 +21,6 @@ class UserService:
         return result.scalars().first()
     
     async def get_user_analyses(self, user_id: str):
-        # db_service = AnalysisDbService()
-        # await db_service.get_db()
         result = await self.db.execute(
             select(Analysis.timestamp, Analysis.filename, Analysis.status)
             .filter(Analysis.user_id == user_id)
@@ -32,12 +32,10 @@ class UserService:
         return result.scalars().first()
     
     async def get_refresh_token(self, refresh_token: str):
-        print(self.db)
         result = await self.db.execute(select(Users).filter(Users.refresh_token == refresh_token))
         return result.scalars().first()
     
     async def get_user_analyses(self, user_id: str):
-        print(self.db)
         result = await self.db.execute(
             select(Analysis.timestamp, Analysis.filename, Analysis.status, Analysis.analysis_id)
             .filter(Analysis.user_id == user_id)
@@ -58,21 +56,17 @@ class UserService:
         if not result_obj and not analysis_obj:
             return {
                 "status": "unknown",
-                "file_activity": [],
+                "file_activity": "",
                 "docker_output": "",
                 "total": 0
             }
         
         return {
             "status": analysis_obj.status if analysis_obj else "unknown",
-            "file_activity": result_obj.file_activity if result_obj and result_obj.file_activity else [],
+            "file_activity": result_obj.file_activity if result_obj and result_obj.file_activity else "",
             "docker_output": result_obj.docker_output if result_obj and result_obj.docker_output else "",
             "total": result_obj.results if result_obj and result_obj.results else 0
         }
-    
-    # async def get_user_by_hashed_password(self, hashed_password: str):
-    #     result = await self.db.execute(select(Users).filter(Users.hashed_password == hashed_password))
-    #     return result.scalars().first()
 
     async def get_chunk_result(self, analysis_id: str, offset: int = 0, limit: int = 50):
         result = await self.db.execute(
@@ -95,11 +89,24 @@ class UserService:
     async def create_user(self,  email: str, password: str):
         hashed_password = get_password_hash(password)
         confiration_code = generate_code()
-        new_user = Users(email=email, hashed_password=hashed_password, confiration_code=confiration_code)
+        expires_at = datetime.utcnow() + timedelta(minutes=10)
+        created_at = datetime.utcnow()
+        new_user = Users(email=email, hashed_password=hashed_password, confiration_code=confiration_code, created_at=created_at, expires_at=expires_at)
         self.db.add(new_user)
         await self.db.commit()
         await self.db.refresh(new_user)
         return new_user, confiration_code
+    
+    async def update_password(self, refresh_token: str, password: str):
+        result = await self.get_refresh_token(refresh_token)
+        print(result)
+        if not result:
+            return None
+        hashed_password = get_password_hash(password)
+        result.hashed_password = hashed_password
+        await self.db.commit()
+        await self.db.refresh(result)
+        return result
     
     async def __add__(self, model):
         self.db.add(model)
@@ -110,10 +117,7 @@ class UserService:
     async def __refresh__(self):
         await self.db.refresh()
 
-    # @staticmethod
     async def create_analysis(self, user_id: str, filename: str, timestamp: str, status: str, analysis_id: uuid.UUID):
-        # db_service = AnalysisDbService()
-        # await db_service.get_db()
         analysis = Analysis(
             user_id=user_id, 
             filename=filename, 
@@ -124,10 +128,7 @@ class UserService:
         self.db.add(analysis)
         await self.db.commit()
     
-    # @staticmethod
     async def create_result(self, analysis_id: uuid.UUID):
-        # db_service = AnalysisDbService()
-        # await db_service.get_db()
         result = Results(
             analysis_id=analysis_id, 
             file_activity="", 
@@ -138,23 +139,16 @@ class UserService:
         await self.db.commit()
 
     async def update_refresh_token(self, email: str, new_refresh_token: str):
-        # Извлекаем пользователя из базы данных
-        print(email, "asdawdsawdas")
         result = await self.db.execute(select(Users).filter(Users.email == email))
         user = result.scalars().first()
-
         if user:
-            # Обновляем refresh_token
             user.refresh_token = new_refresh_token
-
-            # Фиксируем изменения
             await self.db.commit()
-
-            # Обновляем объект в сессии
             await self.db.refresh(user)
-
             return user
         else:
-            print("sadawdas")
             return None
         
+    async def notify_analysis_completed(self, analysis_id: str):
+        for q in subscribers:
+            await q.put({"status": "completed", "analysis_id": analysis_id})

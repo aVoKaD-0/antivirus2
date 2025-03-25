@@ -9,6 +9,7 @@ import uuid
 from app.services.db_service import AnalysisDbService
 # from app.auth.auth import uuid_by_token
 from sqlalchemy.ext import asyncio
+from app.domain.models.database import get_db
 
 class Logger:
     # Добавляем лог в файл только один раз при старте
@@ -20,7 +21,10 @@ class Logger:
         return None
 
     @staticmethod
-    async def analysis_log(msg, analysis_id, db):
+    async def analysis_log(msg, analysis_id):
+        print(msg, "sadwads")
+        db = AnalysisDbService().get_db()
+        print("sdfsd", db)
         result = await AnalysisDbService().get_result(analysis_id, db)
         if result:
             result.docker_output += msg + "\n"
@@ -28,17 +32,17 @@ class Logger:
         return 
     
     @staticmethod
-    async def save_result(analysis_id, result_data, db):
-        print(result_data)
+    async def save_result(analysis_id, result_data):
+        db = AnalysisDbService().get_db()
         result = await AnalysisDbService().get_result(analysis_id, db)
         if result:
-            print(result)
             result.results = result_data
             await db.commit()
         return 
     
     @staticmethod
-    async def save_file_activity(analysis_id, history, db):
+    async def save_file_activity(analysis_id, history):
+        db = AnalysisDbService().get_db()
         result = await AnalysisDbService().get_result(analysis_id, db)
         analysis = await AnalysisDbService().get_analysis(analysis_id, db)
         if result:
@@ -48,7 +52,8 @@ class Logger:
         return
 
     @staticmethod
-    async def update_history_on_error(analysis_id, error_message, db):
+    async def update_history_on_error(analysis_id, error_message):
+        db = AnalysisDbService().get_db()
         result = await AnalysisDbService().get_result(analysis_id, db)
         analysis = await AnalysisDbService().get_analysis(analysis_id, db)
         if analysis and result:

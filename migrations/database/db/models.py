@@ -1,11 +1,7 @@
-from app.domain.models.user import Users
-from sqlalchemy import Column, Integer, String, VARCHAR, Boolean, DateTime, JSON, ForeignKey
-from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
 from migrations.database.db.schemas import Base
-import asyncio
-import subprocess
-from concurrent.futures import ThreadPoolExecutor
+from sqlalchemy import Column, Integer, String, ForeignKey
 
 class Analysis(Base):
     __tablename__ = "analysis"
@@ -17,10 +13,8 @@ class Analysis(Base):
     status = Column(String)
     analysis_id = Column(UUID(as_uuid=True), unique=True)
 
-    # Связь с таблицей Users
     user = relationship("Users", back_populates="analyses")
 
-    # Связь с таблицей Results
     result = relationship("Results", back_populates="analysis", uselist=False)
 
 class Results(Base):
@@ -31,5 +25,4 @@ class Results(Base):
     docker_output = Column(String)
     results = Column(String)
 
-    # Связь для удобного обращения к анализу из результата
     analysis = relationship("Analysis", back_populates="result")
