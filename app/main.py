@@ -43,6 +43,8 @@ def create_app() -> FastAPI:
     
     @app.middleware("http")
     async def check_token(request: Request, call_next):
+        if (request.url.path == "/users/" and request.cookies.get("access_token") and request.cookies.get("refresh_token")):
+            return RedirectResponse(url="/analysis/")
         if (request.url.path.startswith("/users/") and not request.cookies.get("access_token") and not request.cookies.get("refresh_token")) or request.url.path.startswith("/static/") or request.url.path == "/":
             return await call_next(request)
         if not request.cookies.get("access_token") and not request.cookies.get("refresh_token") and not request.url.path.startswith("/users/") and not request.url.path.startswith("/static/") and request.url.path != "/":
