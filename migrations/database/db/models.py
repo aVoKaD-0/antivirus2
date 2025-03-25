@@ -3,6 +3,9 @@ from sqlalchemy.dialects.postgresql import UUID
 from migrations.database.db.schemas import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 
+# Модель Users находится в другом модуле, используем строковое имя класса для отложенной загрузки
+# from app.domain.models.user import Users  # Не импортируем напрямую во избежание циклических импортов
+
 class Analysis(Base):
     __tablename__ = "analysis"
 
@@ -13,7 +16,8 @@ class Analysis(Base):
     status = Column(String)
     analysis_id = Column(UUID(as_uuid=True), unique=True)
 
-    user = relationship("Users", back_populates="analyses")
+    # Используем строковое имя класса и имя модуля для отложенной загрузки
+    user = relationship("Users", foreign_keys=[user_id], back_populates="analyses")
 
     result = relationship("Results", back_populates="analysis", uselist=False)
 

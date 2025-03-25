@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const FILE_ACTIVITY_LIMIT = 500;
     let fileActivityTotal = 0;
 
+    // Глобальные переменные для постраничной загрузки ETL данных
+    let etlOffset = 0;
+    const ETL_CHUNK_LIMIT = 200;
+    let etlTotal = 0;
+
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('drag-over');
@@ -158,7 +163,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.status === 404) {
                     document.getElementById('fileActivityContent').textContent = 'Нет данных по файловой активности.';
                     document.getElementById('dockerOutputContent').textContent = 'Нет логов Docker.';
+                    document.getElementById('etlOutputContent').textContent = 'Нет данных ETL результатов.';
                     updateStatus('Нет данных');
+                    
+                    // Скрываем индикаторы загрузки
+                    const dockerLoader = document.getElementById('dockerOutputLoader');
+                    if (dockerLoader) dockerLoader.style.display = 'none';
+            
+                    const fileLoader = document.getElementById('fileActivityLoader');
+                    if (fileLoader) fileLoader.style.display = 'none';
+                    
+                    const etlLoader = document.getElementById('etlOutputLoader');
+                    if (etlLoader) etlLoader.style.display = 'none';
+                    
                     return;
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -184,15 +201,30 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 dockerOutputContent.textContent = 'Нет логов Docker.';
             }
+            
+            // Скрываем индикаторы загрузки
             const dockerLoader = document.getElementById('dockerOutputLoader');
             if (dockerLoader) dockerLoader.style.display = 'none';
     
-            const loader = document.getElementById('fileActivityLoader');
-            if (loader) loader.style.display = 'none';
+            const fileLoader = document.getElementById('fileActivityLoader');
+            if (fileLoader) fileLoader.style.display = 'none';
+            
+            // Для ETL результатов не скрываем индикатор загрузки здесь,
+            // это будет делать функция loadEtlChunk при загрузке данных
         } catch (error) {
             console.error('Ошибка при получении результатов анализа:', error);
             analysisStatus.textContent = 'Ошибка при получении результатов анализа: ' + error.message;
             analysisStatus.style.color = 'var(--error-color)';
+            
+            // Скрываем индикаторы загрузки в случае ошибки
+            const dockerLoader = document.getElementById('dockerOutputLoader');
+            if (dockerLoader) dockerLoader.style.display = 'none';
+    
+            const fileLoader = document.getElementById('fileActivityLoader');
+            if (fileLoader) fileLoader.style.display = 'none';
+            
+            const etlLoader = document.getElementById('etlOutputLoader');
+            if (etlLoader) etlLoader.style.display = 'none';
         }
     }
 
@@ -278,9 +310,357 @@ document.addEventListener('DOMContentLoaded', function() {
     var x = window.A;
     console.log(x);
 
+    // Функция для форматирования JSON строк в более читабельный вид
+    function tryFormatJSON(text) {
+        try {
+            // Пытаемся распарсить строку как JSON
+            const jsonObj = JSON.parse(text);
+            // Если успешно, возвращаем отформатированный JSON с отступами
+            return JSON.stringify(jsonObj, null, 2);
+        } catch (e) {
+            // Если не удалось распарсить как JSON, возвращаем исходный текст
+            return text;
+        }
+    }
+
+    // Функция для загрузки ETL данных
+    async function loadEtlChunk(analysisId, initialLoad = false) {
+        console.log(`Загрузка ETL чанка: offset=${etlOffset}, limit=${ETL_CHUNK_LIMIT}`);
+        try {
+            // Показываем индикатор загрузки только при первой загрузке
+            if (initialLoad) {
+                document.getElementById('etlOutputLoader').style.display = 'block';
+            }
+            
+            const response = await fetch(`/analysis/etl-chunk/${analysisId}?offset=${etlOffset}&limit=${ETL_CHUNK_LIMIT}`);
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log("Получены ETL данные:", data);
+            
+            const etlContent = document.getElementById('etlOutputContent');
+            
+            // При первой загрузке очищаем контент
+            if (initialLoad) {
+                etlContent.innerHTML = '';
+            }
+            
+            // Добавляем полученные строки с форматированием JSON
+            if (data.chunk && data.chunk.length > 0) {
+                // Обрабатываем каждую строку отдельно
+                let formattedHtml = '';
+                
+                data.chunk.forEach(line => {
+                    try {
+                        // Пытаемся распарсить строку как JSON
+                        const jsonObj = JSON.parse(line);
+                        // Преобразуем в отформатированный JSON с отступами
+                        const formattedJson = JSON.stringify(jsonObj, null, 2);
+                        // Создаем блок кода с подсветкой синтаксиса
+                        const codeBlock = document.createElement('code');
+                        codeBlock.className = 'language-json';
+                        codeBlock.textContent = formattedJson;
+                        // Применяем подсветку синтаксиса
+                        hljs.highlightElement(codeBlock);
+                        // Добавляем к итоговому HTML
+                        formattedHtml += `<div class="json-block">${codeBlock.outerHTML}</div>`;
+                    } catch (e) {
+                        // Если не JSON, просто добавляем строку
+                        formattedHtml += `<div>${line}</div>`;
+                    }
+                });
+                
+                if (initialLoad || etlContent.innerHTML === 'Нет данных ETL результатов.') {
+                    etlContent.innerHTML = formattedHtml;
+                } else {
+                    etlContent.innerHTML += formattedHtml;
+                }
+                
+                etlOffset += data.chunk.length;
+                etlTotal = data.total;
+            } else if (initialLoad) {
+                etlContent.textContent = 'Нет данных ETL результатов.';
+            }
+            
+            // Скрываем индикатор загрузки
+            document.getElementById('etlOutputLoader').style.display = 'none';
+            
+            // Обновляем интерфейс для загрузки следующих порций
+            updateEtlLoadButtons(analysisId);
+            
+            return data;
+        } catch (error) {
+            console.error('Ошибка при загрузке ETL данных:', error);
+            document.getElementById('etlOutputLoader').style.display = 'none';
+            
+            const etlContent = document.getElementById('etlOutputContent');
+            if (initialLoad) {
+                etlContent.textContent = `Ошибка при загрузке ETL данных: ${error.message}`;
+            }
+            
+            return null;
+        }
+    }
+
+    // Функция для обновления кнопок загрузки ETL данных
+    function updateEtlLoadButtons(analysisId) {
+        const container = document.getElementById('etlOutput');
+        let buttonArea = document.getElementById('etlButtonArea');
+        
+        if (!buttonArea) {
+            buttonArea = document.createElement('div');
+            buttonArea.id = 'etlButtonArea';
+            buttonArea.style.display = 'flex';
+            buttonArea.style.flexDirection = 'column';
+            buttonArea.style.gap = '10px';
+            buttonArea.style.marginTop = '15px';
+            buttonArea.style.padding = '10px';
+            buttonArea.style.backgroundColor = '#f8f9fa';
+            buttonArea.style.borderRadius = '5px';
+            container.appendChild(buttonArea);
+        }
+        
+        buttonArea.innerHTML = "";
+        
+        // Отображаем информацию об оставшихся строках
+        const remainingCount = document.createElement('div');
+        remainingCount.id = 'etlRemainingCount';
+        remainingCount.style.marginBottom = '10px';
+        remainingCount.style.fontWeight = 'bold';
+        remainingCount.textContent = `Загружено строк: ${etlOffset} из ${etlTotal}`;
+        buttonArea.appendChild(remainingCount);
+        
+        // Создаем контейнер для кнопок, чтобы можно было их выровнять в ряд
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.style.display = 'flex';
+        buttonsContainer.style.gap = '10px';
+        buttonsContainer.style.flexWrap = 'wrap';
+        buttonArea.appendChild(buttonsContainer);
+        
+        // Добавляем кнопки только если есть еще данные для загрузки
+        if (etlTotal > etlOffset) {
+            const loadMoreBtn = document.createElement('button');
+            loadMoreBtn.id = 'loadMoreEtlBtn';
+            loadMoreBtn.textContent = 'Загрузить ещё 200 строк';
+            loadMoreBtn.className = 'btn btn-secondary';
+            loadMoreBtn.style.minWidth = '200px';
+            loadMoreBtn.addEventListener('click', function() {
+                loadEtlChunk(analysisId, false);
+            });
+            buttonsContainer.appendChild(loadMoreBtn);
+        }
+        
+        // Добавляем кнопку скачивания полного JSON файла
+        const downloadJsonBtn = document.createElement('button');
+        downloadJsonBtn.id = 'downloadJsonBtn';
+        downloadJsonBtn.textContent = 'Скачать полный JSON файл';
+        downloadJsonBtn.className = 'btn btn-primary';
+        downloadJsonBtn.style.minWidth = '200px';
+        downloadJsonBtn.addEventListener('click', function() {
+            window.location.href = `/analysis/download-json/${analysisId}`;
+        });
+        buttonsContainer.appendChild(downloadJsonBtn);
+        
+        // Добавляем кнопку скачивания оригинального ETL файла
+        const downloadEtlBtn = document.createElement('button');
+        downloadEtlBtn.id = 'downloadEtlBtn';
+        downloadEtlBtn.textContent = 'Скачать оригинальный ETL файл';
+        downloadEtlBtn.className = 'btn btn-info';
+        downloadEtlBtn.style.minWidth = '200px';
+        downloadEtlBtn.addEventListener('click', function() {
+            window.location.href = `/analysis/download-etl/${analysisId}?format=etl`;
+        });
+        buttonsContainer.appendChild(downloadEtlBtn);
+    }
+
+    // Функция для проверки статуса конвертации ETL и запуска процесса при необходимости
+    async function checkEtlConversionStatus(analysisId) {
+        try {
+            const etlContent = document.getElementById('etlOutputContent');
+            const etlLoader = document.getElementById('etlOutputLoader');
+            
+            // Показываем индикатор загрузки
+            etlLoader.style.display = 'block';
+            etlContent.textContent = 'Проверка статуса ETL данных...';
+            
+            // Запрашиваем статус конвертации
+            const response = await fetch(`/analysis/etl-json/${analysisId}`);
+            const data = await response.json();
+            
+            if (response.status === 404) {
+                // ETL файл не найден
+                etlLoader.style.display = 'none';
+                etlContent.textContent = 'ETL файл не найден. Анализ может быть не завершен.';
+                return false;
+            }
+            
+            if (data.status === 'converted') {
+                // ETL уже конвертирован в JSON, можно загружать чанки
+                etlLoader.style.display = 'none';
+                etlContent.textContent = 'ETL данные готовы. Загрузка...';
+                return true;
+            } else if (data.status === 'not_converted') {
+                // Требуется конвертация
+                etlContent.textContent = 'Выполняется конвертация ETL данных. Это может занять некоторое время...';
+                
+                // Запускаем асинхронную конвертацию
+                const conversionResponse = await fetch(`/analysis/convert-etl/${analysisId}`, {
+                    method: 'POST'
+                });
+                
+                const conversionData = await conversionResponse.json();
+                
+                if (conversionData.status === 'processing') {
+                    // Конвертация запущена, устанавливаем обработчик событий WebSocket
+                    setupEtlConversionWebSocket(analysisId);
+                    return false;
+                } else if (conversionData.status === 'completed') {
+                    // Конвертация уже была выполнена ранее
+                    etlLoader.style.display = 'none';
+                    etlContent.textContent = 'ETL данные готовы. Загрузка...';
+                    return true;
+                } else {
+                    etlLoader.style.display = 'none';
+                    etlContent.textContent = `Ошибка: ${conversionData.error || 'Неизвестная ошибка при конвертации ETL'}`;
+                    return false;
+                }
+            } else {
+                // Неизвестный статус
+                etlLoader.style.display = 'none';
+                etlContent.textContent = `Неизвестный статус ETL данных: ${data.status}`;
+                return false;
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке статуса ETL:', error);
+            const etlLoader = document.getElementById('etlOutputLoader');
+            etlLoader.style.display = 'none';
+            
+            const etlContent = document.getElementById('etlOutputContent');
+            etlContent.textContent = `Ошибка при проверке статуса ETL данных: ${error.message}`;
+            return false;
+        }
+    }
+    
+    // Функция для настройки обработчика WebSocket сообщений о конвертации
+    function setupEtlConversionWebSocket(analysisId) {
+        if (typeof analysisId === 'undefined' || !analysisId) {
+            console.error('ID анализа не определен');
+            return;
+        }
+        
+        // Проверяем, нет ли уже активного соединения
+        if (window.etlWs && window.etlWs.readyState === WebSocket.OPEN) {
+            console.log('WebSocket соединение для ETL уже установлено');
+            return;
+        }
+        
+        // Создаем WebSocket соединение для конвертации ETL
+        window.etlWs = new WebSocket(`ws://${window.location.host}/analysis/ws/${analysisId}`);
+        
+        window.etlWs.onopen = function() {
+            console.log('WebSocket соединение для ETL установлено');
+        };
+        
+        window.etlWs.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log('Получено сообщение WebSocket для ETL:', data);
+            
+            if (data.event === 'etl_converted') {
+                // ETL конвертирован успешно, загружаем чанки
+                console.log('ETL успешно конвертирован');
+                const etlLoader = document.getElementById('etlOutputLoader');
+                etlLoader.style.display = 'none';
+                
+                const etlContent = document.getElementById('etlOutputContent');
+                etlContent.textContent = 'ETL данные готовы. Загрузка...';
+                
+                // Загружаем данные
+                loadEtlChunk(analysisId, true);
+                
+                // Закрываем соединение, оно больше не нужно
+                window.etlWs.close();
+            } else if (data.event === 'etl_conversion_error') {
+                // Ошибка при конвертации
+                console.error('Ошибка при конвертации ETL:', data.message);
+                const etlLoader = document.getElementById('etlOutputLoader');
+                etlLoader.style.display = 'none';
+                
+                const etlContent = document.getElementById('etlOutputContent');
+                etlContent.textContent = `Ошибка при конвертации ETL: ${data.message}`;
+                
+                // Закрываем соединение
+                window.etlWs.close();
+            }
+        };
+        
+        window.etlWs.onclose = function() {
+            console.log('WebSocket соединение для ETL закрыто');
+        };
+        
+        window.etlWs.onerror = function(error) {
+            console.error('Ошибка WebSocket для ETL:', error);
+            const etlLoader = document.getElementById('etlOutputLoader');
+            etlLoader.style.display = 'none';
+            
+            const etlContent = document.getElementById('etlOutputContent');
+            etlContent.textContent = 'Ошибка соединения при конвертации ETL';
+        };
+    }
+
+    // Функция инициализации загрузки ETL данных
+    async function initEtlDataLoad(analysisId) {
+        // Сбрасываем смещение при первой загрузке
+        etlOffset = 0;
+        etlTotal = 0;
+        
+        // Проверяем статус конвертации ETL и при необходимости запускаем процесс
+        const isReady = await checkEtlConversionStatus(analysisId);
+        
+        // Если ETL готов, загружаем данные
+        if (isReady) {
+            // Загружаем первую порцию данных
+            loadEtlChunk(analysisId, true);
+        }
+    }
+
+    // Функция обработки клика по табу ETL данных
+    function setupEtlTabClickHandler(analysisId) {
+        const etlTab = document.querySelector('a[href="#etlOutput"]');
+        if (etlTab) {
+            etlTab.addEventListener('click', function() {
+                // Если данные еще не загружены, инициируем загрузку
+                const etlContent = document.getElementById('etlOutputContent');
+                if (etlContent.textContent === 'Нет данных ETL результатов.' || etlTotal === 0) {
+                    initEtlDataLoad(analysisId);
+                }
+            });
+        }
+    }
+
+    // Обновляем функцию showResults для инициализации загрузки ETL данных
+    function loadInitialData(analysisId) {
+        // Настраиваем обработчик событий для табов
+        setupEtlTabClickHandler(analysisId);
+        
+        // Если текущий статус "completed", автоматически загружаем ETL данные
+        if (window.analysisStatus === 'completed') {
+            // Проверяем, активен ли таб ETL результатов
+            const etlTab = document.querySelector('a[href="#etlOutput"]');
+            const isEtlTabActive = etlTab?.classList.contains('active');
+            
+            // Если таб ETL активен или это первая загрузка, инициируем загрузку ETL данных
+            if (isEtlTabActive || document.getElementById('etlOutputContent').textContent === '') {
+                initEtlDataLoad(analysisId);
+            }
+        }
+    }
+
     if (typeof analysisId !== "undefined" && analysisId) {
         console.log("Загружаем результаты анализа:", analysisId);
         showResults(analysisId);
+        loadInitialData(analysisId);
         // setInterval(() => {
         //     updateDockerLogs(analysisId);
         // }, 5000);

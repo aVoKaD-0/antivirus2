@@ -22,45 +22,67 @@ class Logger:
 
     @staticmethod
     async def analysis_log(msg, analysis_id):
-        print(msg, "sadwads")
-        db = AnalysisDbService().get_db()
-        print("sdfsd", db)
-        result = await AnalysisDbService().get_result(analysis_id, db)
-        if result:
-            result.docker_output += msg + "\n"
-            await db.commit()
-        return 
+        try:
+            db = await AnalysisDbService().get_database()
+            try:
+                result = await AnalysisDbService().get_result(analysis_id, db)
+                if result:
+                    result.docker_output += msg + "\n"
+                    await db.commit()
+            finally:
+                await db.close()
+        except Exception as e:
+            Logger.log(f"Ошибка в analysis_log: {str(e)}")
+        return
     
     @staticmethod
     async def save_result(analysis_id, result_data):
-        db = AnalysisDbService().get_db()
-        result = await AnalysisDbService().get_result(analysis_id, db)
-        if result:
-            result.results = result_data
-            await db.commit()
+        try:
+            db = await AnalysisDbService().get_database()
+            try:
+                result = await AnalysisDbService().get_result(analysis_id, db)
+                if result:
+                    result.results = result_data
+                    await db.commit()
+            finally:
+                await db.close()
+        except Exception as e:
+            Logger.log(f"Ошибка в save_result: {str(e)}")
         return 
     
     @staticmethod
     async def save_file_activity(analysis_id, history):
-        db = AnalysisDbService().get_db()
-        result = await AnalysisDbService().get_result(analysis_id, db)
-        analysis = await AnalysisDbService().get_analysis(analysis_id, db)
-        if result:
-            analysis.status = "completed"
-            result.file_activity = history
-            await db.commit()
+        try:
+            db = await AnalysisDbService().get_database()
+            try:
+                result = await AnalysisDbService().get_result(analysis_id, db)
+                analysis = await AnalysisDbService().get_analysis(analysis_id, db)
+                if result:
+                    analysis.status = "completed"
+                    result.file_activity = history
+                    await db.commit()
+            finally:
+                await db.close()
+        except Exception as e:
+            Logger.log(f"Ошибка в save_file_activity: {str(e)}")
         return
 
     @staticmethod
     async def update_history_on_error(analysis_id, error_message):
-        db = AnalysisDbService().get_db()
-        result = await AnalysisDbService().get_result(analysis_id, db)
-        analysis = await AnalysisDbService().get_analysis(analysis_id, db)
-        if analysis and result:
-            analysis.status = "error"
-            result.docker_output = error_message
-            result.file_activity = ""
-            await db.commit()
+        try:
+            db = await AnalysisDbService().get_database()
+            try:
+                result = await AnalysisDbService().get_result(analysis_id, db)
+                analysis = await AnalysisDbService().get_analysis(analysis_id, db)
+                if analysis and result:
+                    analysis.status = "error"
+                    result.docker_output = error_message
+                    result.file_activity = ""
+                    await db.commit()
+            finally:
+                await db.close()
+        except Exception as e:
+            Logger.log(f"Ошибка в update_history_on_error: {str(e)}")
         return None
 
     @staticmethod

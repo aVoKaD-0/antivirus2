@@ -6,6 +6,7 @@ docker ="D:\\programming\\GIt\\gitlab\\antivirus\\dockerer"
 docker2 = "D:\\\\programming\\\\GIt\\\\gitlab\\\\antivirus\\\\dockerer"
 
 os.path.join(docker, "files")
+os.path.join(docker, "analysis")
 
 os.path.join(hyper, "dock", "Virtual Hard Disks")
 os.path.join(hyper, "dock", "Virtual Machines")

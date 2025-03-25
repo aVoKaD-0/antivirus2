@@ -152,3 +152,17 @@ class UserService:
     async def notify_analysis_completed(self, analysis_id: str):
         for q in subscribers:
             await q.put({"status": "completed", "analysis_id": analysis_id})
+
+    async def get_analysis_by_id(self, analysis_id: str):
+        """
+        Получение анализа по ID
+        
+        Args:
+            analysis_id: ID анализа
+            
+        Returns:
+            Объект анализа или None, если анализ не найден
+        """
+        query = select(Analysis).filter(Analysis.analysis_id == analysis_id)
+        result = await self.db.execute(query)
+        return result.scalars().first()

@@ -10,7 +10,7 @@ project_dir = os.getcwd()[:os.getcwd().index("antivirus")].replace('\\', '\\')+"
 class FileOperations:
     @staticmethod
     def user_upload(email):
-        upload_path = os.path.join(docker, email)
+        upload_path = os.path.join(docker, "analysis", email)
         os.makedirs(upload_path, exist_ok=True)
         return upload_path
 

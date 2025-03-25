@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FileTrace</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/github.min.css">
     <link rel="stylesheet" href="/static/analysis.css">
 </head>
 <body>
@@ -23,13 +25,14 @@
 
         <div class="profile-icon-container">
             <img src="/static/profile-icon.svg" alt="Profile" class="profile-icon" id="profileIcon">
-            <button id="changePasswordBtn" class="btn btn-primary" style="display: none;">Сменить пароль</button>
-            <button id="logoutBtnProfile" class="btn btn-danger" style="display: none;">Выйти</button>
+            <button id="changePasswordBtn" class="btn btn-primary" style="display: none;"><i class="bi bi-key"></i> Сменить пароль</button>
+            <button id="logoutBtnProfile" class="btn btn-danger" style="display: none;"><i class="bi bi-box-arrow-right"></i> Выйти</button>
         </div>
 
         <div class="mb-4 text-center">
-            <a href="/" class="btn btn-primary">На главную</a>
-            <button id="logoutBtn" class="btn btn-danger" style="display: none;">Выйти</button>
+            <a href="/" class="btn btn-primary"><i class="bi bi-house-door"></i> На главную</a>
+            <a href="/analysis" class="btn btn-secondary"><i class="bi bi-eye-slash"></i> Скрыть результаты</a>
+            <button id="logoutBtn" class="btn btn-danger" style="display: none;"><i class="bi bi-box-arrow-right"></i> Выйти</button>
         </div>
 
         <!-- Зона загрузки файла -->
@@ -78,6 +81,9 @@
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#dockerOutput">Логи Docker</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#etlOutput">ETL результаты</a>
+                    </li>
                 </ul>
                 
                 <div class="tab-content mt-3">
@@ -102,6 +108,19 @@
                             <p>Загрузка логов Docker...</p>
                         </div>
                         <pre id="dockerOutputContent" class="result-content" style="max-height: 600px; overflow-y: auto;">{% if docker_output %}{{ docker_output }}{% else %}Нет данных по логам Docker.{% endif %}</pre>
+                    </div>
+                    <div class="tab-pane fade" id="etlOutput">
+                        <div id="etlOutputLoader" class="text-center mt-2">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Загрузка ETL результатов...</span>
+                            </div>
+                            <p>Загрузка ETL результатов...</p>
+                        </div>
+                        <div class="alert alert-info mt-2 mb-2" role="alert">
+                            <strong>Внимание!</strong> ETL результаты могут быть очень большими. Для удобства отображаются первые 500 строк.
+                            Вы можете загружать данные постепенно или скачать полный JSON файл или оригинальный ETL файл.
+                        </div>
+                        <pre id="etlOutputContent" class="result-content" style="max-height: 600px; overflow-y: auto;">{% if etl_output %}{{ etl_output | truncate(500) }}{% else %}Нет данных ETL результатов.{% endif %}</pre>
                     </div>
                 </div>
             </div>
@@ -139,6 +158,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/json.min.js"></script>
     <script src="/static/analysis.js?v=1.0"></script>
 </body>
 </html> 

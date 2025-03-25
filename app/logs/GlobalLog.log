@@ -1,0 +1,195 @@
+2025-03-25 21:19:04.804 | INFO     | app.utils.logging:log:20 - connect websocket 34658d9d-8ffa-46ad-85f2-9fe747cf1d7f, 192.168.31.153
+2025-03-25 21:19:46.879 | INFO     | app.utils.logging:log:20 - disconnect websocket 34658d9d-8ffa-46ad-85f2-9fe747cf1d7f, 192.168.31.153
+2025-03-25 22:01:44.561 | INFO     | app.utils.logging:log:20 - Ошибка в analysis_log: When initializing mapper Mapper[Analysis(analysis)], expression 'Users' failed to locate a name ('Users'). If this is a class name, consider adding this relationship() to the <class 'migrations.database.db.models.Analysis'> class after both dependent classes have been defined.
+2025-03-25 22:01:44.568 | INFO     | app.utils.logging:log:20 - Ошибка в analysis_log: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[Analysis(analysis)]'. Original exception was: When initializing mapper Mapper[Analysis(analysis)], expression 'Users' failed to locate a name ('Users'). If this is a class name, consider adding this relationship() to the <class 'migrations.database.db.models.Analysis'> class after both dependent classes have been defined.
+2025-03-25 22:01:44.573 | INFO     | app.utils.logging:log:20 - Ошибка в analysis_log: One or more mappers failed to initialize - can't proceed with initialization of other mappers. Triggering mapper: 'Mapper[Analysis(analysis)]'. Original exception was: When initializing mapper Mapper[Analysis(analysis)], expression 'Users' failed to locate a name ('Users'). If this is a class name, consider adding this relationship() to the <class 'migrations.database.db.models.Analysis'> class after both dependent classes have been defined.
+2025-03-25 22:25:12.306 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:25:23.017 | INFO     | app.utils.logging:log:20 - Ошибка при скачивании ETL файла: 404: ETL файл не найден
+2025-03-25 22:25:23.027 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:25:25.224 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:25:44.213 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:25:44.321 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:26:06.771 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:26:06.878 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:27:24.768 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:28:01.855 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:28:01.981 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [WinError 2] Не удается найти указанный файл
+2025-03-25 22:29:33.004 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:29:37.634 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:29:37.736 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: name 'etl_file' is not defined
+2025-03-25 22:30:34.782 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:30:38.779 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:30:38.884 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [WinError 2] Не удается найти указанный файл
+2025-03-25 22:33:00.489 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:33:15.124 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:33:15.269 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [WinError 2] Не удается найти указанный файл
+2025-03-25 22:35:01.556 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:35:06.644 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:35:06.760 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [WinError 2] Не удается найти указанный файл
+2025-03-25 22:35:15.251 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:35:23.816 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:35:23.931 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [WinError 2] Не удается найти указанный файл
+2025-03-25 22:35:44.950 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:41:22.637 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:41:22.733 | INFO     | app.utils.logging:log:20 - Директория анализа: D:\programming\GIt\gitlab\antivirus\dockerer\analysis\93a1519c-58a2-4d0a-a1aa-351e97beb1b0
+2025-03-25 22:41:22.734 | INFO     | app.utils.logging:log:20 - Найден ETL файл: D:\programming\GIt\gitlab\antivirus\dockerer\analysis\93a1519c-58a2-4d0a-a1aa-351e97beb1b0\trace.etl
+2025-03-25 22:41:22.737 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [WinError 2] Не удается найти указанный файл
+2025-03-25 22:42:55.328 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:42:55.469 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:42:55.476 | INFO     | app.utils.logging:log:20 - Директория анализа: D:\programming\GIt\gitlab\antivirus\dockerer\analysis\93a1519c-58a2-4d0a-a1aa-351e97beb1b0
+2025-03-25 22:42:55.477 | INFO     | app.utils.logging:log:20 - Найден ETL файл: D:\programming\GIt\gitlab\antivirus\dockerer\analysis\93a1519c-58a2-4d0a-a1aa-351e97beb1b0\trace.etl
+2025-03-25 22:42:55.481 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [WinError 2] Не удается найти указанный файл
+2025-03-25 22:43:06.270 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:43:06.400 | INFO     | app.utils.logging:log:20 - Директория анализа: D:\programming\GIt\gitlab\antivirus\dockerer\analysis\93a1519c-58a2-4d0a-a1aa-351e97beb1b0
+2025-03-25 22:43:06.401 | INFO     | app.utils.logging:log:20 - Найден ETL файл: D:\programming\GIt\gitlab\antivirus\dockerer\analysis\93a1519c-58a2-4d0a-a1aa-351e97beb1b0\trace.etl
+2025-03-25 22:43:06.406 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [WinError 2] Не удается найти указанный файл
+2025-03-25 22:43:06.410 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:46:46.403 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:48:49.555 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 22:48:49.659 | INFO     | app.utils.logging:log:20 - Директория анализа: D:\programming\GIt\gitlab\antivirus2\data\analysis\93a1519c-58a2-4d0a-a1aa-351e97beb1b0
+2025-03-25 22:48:49.660 | INFO     | app.utils.logging:log:20 - ETL файлы не найдены в директории: D:\programming\GIt\gitlab\antivirus2\data\analysis\93a1519c-58a2-4d0a-a1aa-351e97beb1b0
+2025-03-25 22:49:15.186 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:04:13.274 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:04:13.288 | INFO     | app.utils.logging:log:20 - Ошибка при получении ETL JSON: name 'get_analysis_dir' is not defined
+2025-03-25 23:04:15.818 | INFO     | app.utils.logging:log:20 - Ошибка при скачивании ETL файла: 'str' object has no attribute 'exists'
+2025-03-25 23:04:15.826 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:05:12.133 | INFO     | app.utils.logging:log:20 - Ошибка при скачивании ETL файла: 'str' object has no attribute 'glob'
+2025-03-25 23:05:12.134 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:05:12.143 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:05:42.287 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:07:41.470 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:07:45.964 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:07:45.970 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: [Errno 2] No such file or directory: 'D:\\programming\\GIt\\gitlab\\antivirus\\dockerer\\analysis\\93a1519c-58a2-4d0a-a1aa-351e97beb1b0\\trace.json'
+2025-03-25 23:08:07.675 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:08:11.827 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:08:11.934 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+2025-03-25 23:08:24.475 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:09:48.465 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:09:48.472 | INFO     | app.utils.logging:log:20 - Ошибка при конвертации ETL в JSON: name 'json_file_path' is not defined
+2025-03-25 23:10:08.334 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:10:12.906 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:10:12.978 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-16
+2025-03-25 23:10:13.698 | INFO     | app.utils.logging:log:20 - JSON файл успешно загружен
+2025-03-25 23:11:04.935 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:11:05.492 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-16
+2025-03-25 23:11:06.427 | INFO     | app.utils.logging:log:20 - JSON файл успешно загружен
+2025-03-25 23:11:06.487 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:11:34.375 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:11:36.977 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-16
+2025-03-25 23:11:37.739 | INFO     | app.utils.logging:log:20 - JSON файл успешно загружен
+2025-03-25 23:11:37.806 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:11:48.363 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:11:48.488 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:11:48.594 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-16
+2025-03-25 23:11:49.608 | INFO     | app.utils.logging:log:20 - JSON файл успешно загружен
+2025-03-25 23:12:21.975 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:12:22.003 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:12:22.091 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-16
+2025-03-25 23:12:23.275 | INFO     | app.utils.logging:log:20 - JSON файл успешно загружен
+2025-03-25 23:12:45.598 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:12:45.650 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:12:45.731 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-16
+2025-03-25 23:12:46.824 | INFO     | app.utils.logging:log:20 - JSON файл успешно загружен
+2025-03-25 23:13:58.533 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:13:58.631 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:14:26.611 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:14:26.730 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:14:59.619 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:15:17.757 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:15:45.032 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:15:45.166 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:16:02.345 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:16:49.407 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:17:22.769 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:17:22.823 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:17:36.946 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:17:37.038 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:19:34.306 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:19:34.358 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:19:49.475 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:20:09.220 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:20:49.799 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:20:59.618 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:21:33.898 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:21:40.757 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:22:31.770 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:24:08.859 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:25:08.855 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:25:32.187 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:26:11.112 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:26:11.225 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:26:37.475 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:26:39.479 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:26:58.012 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:26:58.167 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:27:08.859 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:27:09.141 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:28:35.506 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:28:38.865 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:29:01.226 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:29:04.407 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:31:06.833 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:31:21.459 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:31:26.927 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-25 23:31:53.859 | INFO     | app.utils.logging:log:20 - Ошибка при анализе файла: a coroutine was expected, got None
+2025-03-25 23:33:15.589 | INFO     | app.utils.logging:log:20 - Файл загружен и анализ запущен. ID анализа: 09b52c2f-f7e0-47dd-9f65-235009381aee
+2025-03-25 23:33:25.546 | INFO     | app.utils.logging:log:20 - connect websocket 09b52c2f-f7e0-47dd-9f65-235009381aee, 192.168.31.153
+2025-03-25 23:33:31.308 | INFO     | app.utils.logging:log:20 - disconnect websocket 09b52c2f-f7e0-47dd-9f65-235009381aee, 192.168.31.153
+2025-03-25 23:34:11.835 | INFO     | app.utils.logging:log:20 - Файл загружен и анализ запущен. ID анализа: 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e
+2025-03-25 23:34:12.746 | INFO     | app.utils.logging:log:20 - connect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:35:24.524 | INFO     | app.utils.logging:log:20 - disconnect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:35:24.914 | INFO     | app.utils.logging:log:20 - connect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:39:00.505 | INFO     | app.utils.logging:log:20 - disconnect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:39:09.951 | INFO     | app.utils.logging:log:20 - connect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:39:10.655 | INFO     | app.utils.logging:log:20 - disconnect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:39:28.241 | INFO     | app.utils.logging:log:20 - Файл загружен и анализ запущен. ID анализа: cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3
+2025-03-25 23:39:29.159 | INFO     | app.utils.logging:log:20 - connect websocket cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3, 192.168.31.153
+2025-03-25 23:40:13.742 | INFO     | app.utils.logging:log:20 - disconnect websocket cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3, 192.168.31.153
+2025-03-25 23:40:13.997 | INFO     | app.utils.logging:log:20 - connect websocket cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3, 192.168.31.153
+2025-03-25 23:40:34.149 | INFO     | app.utils.logging:log:20 - disconnect websocket cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3, 192.168.31.153
+2025-03-25 23:40:34.284 | INFO     | app.utils.logging:log:20 - connect websocket cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3, 192.168.31.153
+2025-03-25 23:41:12.358 | INFO     | app.utils.logging:log:20 - disconnect websocket cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3, 192.168.31.153
+2025-03-25 23:41:28.670 | INFO     | app.utils.logging:log:20 - connect websocket cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3, 192.168.31.153
+2025-03-25 23:42:36.487 | INFO     | app.utils.logging:log:20 - disconnect websocket cf4f03ee-53f2-44b6-8e5d-bedd27cbacd3, 192.168.31.153
+2025-03-25 23:45:55.110 | INFO     | app.utils.logging:log:20 - connect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:45:56.117 | INFO     | app.utils.logging:log:20 - Конвертация ETL в CSV для анализа 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e...
+2025-03-25 23:45:56.128 | INFO     | app.utils.logging:log:20 - connect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:46:49.585 | INFO     | app.utils.logging:log:20 - Конвертация ETL в JSON для анализа 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e...
+2025-03-25 23:47:11.643 | INFO     | app.utils.logging:log:20 - disconnect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:47:11.644 | INFO     | app.utils.logging:log:20 - disconnect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:47:12.556 | INFO     | app.utils.logging:log:20 - connect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:47:12.969 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-8
+2025-03-25 23:47:22.869 | INFO     | app.utils.logging:log:20 - disconnect websocket 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e, 192.168.31.153
+2025-03-25 23:47:27.308 | INFO     | app.utils.logging:log:20 - Файл загружен и анализ запущен. ID анализа: aaf31469-3f71-42bd-b181-f6abf9fc7076
+2025-03-25 23:47:28.295 | INFO     | app.utils.logging:log:20 - connect websocket aaf31469-3f71-42bd-b181-f6abf9fc7076, 192.168.31.153
+2025-03-25 23:51:05.449 | INFO     | app.utils.logging:log:20 - Конвертация завершена для анализа 3e71fcb5-fbf7-48c6-92a7-2bd1e1edf14e
+2025-03-25 23:51:26.707 | INFO     | app.utils.logging:log:20 - disconnect websocket aaf31469-3f71-42bd-b181-f6abf9fc7076, 192.168.31.153
+2025-03-25 23:51:27.398 | INFO     | app.utils.logging:log:20 - connect websocket aaf31469-3f71-42bd-b181-f6abf9fc7076, 192.168.31.153
+2025-03-25 23:51:55.964 | INFO     | app.utils.logging:log:20 - disconnect websocket aaf31469-3f71-42bd-b181-f6abf9fc7076, 192.168.31.153
+2025-03-25 23:55:39.399 | INFO     | app.utils.logging:log:20 - connect websocket aaf31469-3f71-42bd-b181-f6abf9fc7076, 192.168.31.153
+2025-03-25 23:56:36.142 | INFO     | app.utils.logging:log:20 - disconnect websocket aaf31469-3f71-42bd-b181-f6abf9fc7076, 192.168.31.153
+2025-03-25 23:56:36.595 | INFO     | app.utils.logging:log:20 - connect websocket aaf31469-3f71-42bd-b181-f6abf9fc7076, 192.168.31.153
+2025-03-25 23:56:59.434 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-8
+2025-03-25 23:57:02.906 | INFO     | app.utils.logging:log:20 - disconnect websocket aaf31469-3f71-42bd-b181-f6abf9fc7076, 192.168.31.153
+2025-03-25 23:57:05.570 | INFO     | app.utils.logging:log:20 - Файл загружен и анализ запущен. ID анализа: fcd16399-0e33-4ccd-924d-70645fb1e391
+2025-03-25 23:57:34.497 | INFO     | app.utils.logging:log:20 - connect websocket fcd16399-0e33-4ccd-924d-70645fb1e391, 192.168.31.153
+2025-03-25 23:58:18.645 | INFO     | app.utils.logging:log:20 - disconnect websocket fcd16399-0e33-4ccd-924d-70645fb1e391, 192.168.31.153
+2025-03-25 23:58:18.770 | INFO     | app.utils.logging:log:20 - connect websocket fcd16399-0e33-4ccd-924d-70645fb1e391, 192.168.31.153
+2025-03-26 00:00:35.646 | INFO     | app.utils.logging:log:20 - disconnect websocket fcd16399-0e33-4ccd-924d-70645fb1e391, 192.168.31.153
+2025-03-26 00:04:16.846 | INFO     | app.utils.logging:log:20 - connect websocket fcd16399-0e33-4ccd-924d-70645fb1e391, 192.168.31.153
+2025-03-26 00:04:45.214 | INFO     | app.utils.logging:log:20 - disconnect websocket fcd16399-0e33-4ccd-924d-70645fb1e391, 192.168.31.153
+2025-03-26 00:05:12.726 | INFO     | app.utils.logging:log:20 - Файл загружен и анализ запущен. ID анализа: 37dc9240-9348-484a-a707-e2832c9ad926
+2025-03-26 00:05:27.136 | INFO     | app.utils.logging:log:20 - connect websocket 37dc9240-9348-484a-a707-e2832c9ad926, 192.168.31.153
+2025-03-26 00:09:51.593 | INFO     | app.utils.logging:log:20 - disconnect websocket 37dc9240-9348-484a-a707-e2832c9ad926, 192.168.31.153
+2025-03-26 00:09:51.805 | INFO     | app.utils.logging:log:20 - connect websocket 37dc9240-9348-484a-a707-e2832c9ad926, 192.168.31.153
+2025-03-26 00:09:58.791 | INFO     | app.utils.logging:log:20 - Определена кодировка файла: utf-16
+2025-03-26 00:10:44.343 | INFO     | app.utils.logging:log:20 - disconnect websocket 37dc9240-9348-484a-a707-e2832c9ad926, 192.168.31.153
+2025-03-26 00:11:21.312 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-26 00:11:26.346 | INFO     | app.utils.logging:log:20 - Конвертация ETL в CSV для анализа 93a1519c-58a2-4d0a-a1aa-351e97beb1b0...
+2025-03-26 00:11:26.356 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-26 00:11:34.935 | INFO     | app.utils.logging:log:20 - Конвертация ETL в JSON для анализа 93a1519c-58a2-4d0a-a1aa-351e97beb1b0...
+2025-03-26 00:11:42.078 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-26 00:11:42.079 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-26 00:11:48.390 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-26 00:11:48.791 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
+2025-03-26 00:11:51.377 | INFO     | app.utils.logging:log:20 - Конвертация завершена для анализа 93a1519c-58a2-4d0a-a1aa-351e97beb1b0

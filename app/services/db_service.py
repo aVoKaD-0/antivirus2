@@ -1,14 +1,11 @@
 from sqlalchemy import select
-from app.domain.models.database import get_db
+from app.domain.models.database import AsyncSessionLocal
 from sqlalchemy.ext.asyncio import AsyncSession
 from migrations.database.db.models import Results, Analysis
 
 class AnalysisDbService:
-
-    async def get_database():
-        async for database in get_db():
-            db = database
-            break
+    async def get_database(self):
+        db = AsyncSessionLocal()
         return db
     
     async def get_result(self, analysis_id: str, db: AsyncSession):
