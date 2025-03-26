@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.sql import text
 from app.auth.auth import generate_code
 from app.domain.models.user import Users
-from app.core.security import get_password_hash
+from app.core.security import get_password_hash, verify_password
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.utils.sse_operations import subscribers
 from migrations.database.db.models import Results, Analysis
@@ -17,8 +17,16 @@ class UserService:
         await self.db.refresh(model)
 
     async def get_user_by_email(self, email: str):
-        result = await self.db.execute(select(Users).filter(Users.email == email))
-        return result.scalars().first()
+        """
+        Получение пользователя по email (алиас для обратной совместимости)
+        
+        Args:
+            email: Email пользователя
+            
+        Returns:
+            User: Объект пользователя или None
+        """
+        return await self.get_by_email(email)
     
     async def get_user_analyses(self, user_id: str):
         result = await self.db.execute(
@@ -32,8 +40,16 @@ class UserService:
         return result.scalars().first()
     
     async def get_refresh_token(self, refresh_token: str):
-        result = await self.db.execute(select(Users).filter(Users.refresh_token == refresh_token))
-        return result.scalars().first()
+        """
+        Получение пользователя по refresh token (алиас для обратной совместимости)
+        
+        Args:
+            refresh_token: Refresh token
+            
+        Returns:
+            User: Объект пользователя или None
+        """
+        return await self.get_by_refresh_token(refresh_token)
     
     async def get_user_analyses(self, user_id: str):
         result = await self.db.execute(
@@ -97,17 +113,59 @@ class UserService:
         await self.db.refresh(new_user)
         return new_user, confiration_code
     
-    async def update_password(self, refresh_token: str, password: str):
-        result = await self.get_refresh_token(refresh_token)
-        print(result)
-        if not result:
+    async def update_password(self, email=None, password=None, refresh_token=None):
+        """
+        Обновление пароля пользователя
+        
+        Args:
+            email: Email пользователя (опционально)
+            password: Новый пароль (опционально)
+            refresh_token: Refresh token (опционально)
+            
+        Returns:
+            User: Объект пользователя или None
+        """
+        from app.core.security import get_password_hash
+        
+        # Если передан refresh_token, получаем пользователя по нему
+        if refresh_token:
+            user = await self.get_by_refresh_token(refresh_token)
+        # Иначе, если передан email, получаем пользователя по email
+        elif email:
+            user = await self.get_by_email(email)
+        else:
             return None
-        hashed_password = get_password_hash(password)
-        result.hashed_password = hashed_password
+        
+        if user is None:
+            return None
+        
+        # Обновляем пароль
+        if password:
+            user.hashed_password = get_password_hash(password)
+        
+        # Сбрасываем счетчик попыток входа при смене пароля
+        user.login_attempts = 0
+        
+        # Сохраняем изменения
+        self.db.add(user)
         await self.db.commit()
-        await self.db.refresh(result)
-        return result
-    
+        
+        return user
+
+    async def get_by_refresh_token(self, refresh_token):
+        """
+        Получение пользователя по refresh token
+        
+        Args:
+            refresh_token: Refresh token
+            
+        Returns:
+            User: Объект пользователя или None
+        """
+        query = select(Users).where(Users.refresh_token == refresh_token)
+        result = await self.db.execute(query)
+        return result.scalar_one_or_none()
+
     async def __add__(self, model):
         self.db.add(model)
     
@@ -138,16 +196,25 @@ class UserService:
         self.db.add(result)
         await self.db.commit()
 
-    async def update_refresh_token(self, email: str, new_refresh_token: str):
-        result = await self.db.execute(select(Users).filter(Users.email == email))
-        user = result.scalars().first()
-        if user:
-            user.refresh_token = new_refresh_token
-            await self.db.commit()
-            await self.db.refresh(user)
-            return user
-        else:
+    async def update_refresh_token(self, email, refresh_token):
+        """
+        Обновление refresh token пользователя
+        
+        Args:
+            email: Email пользователя
+            refresh_token: Новый refresh token или None для сброса
+        
+        Returns:
+            User: Обновленный объект пользователя или None
+        """
+        user = await self.get_by_email(email)
+        if not user:
             return None
+        
+        user.refresh_token = refresh_token
+        self.db.add(user)
+        await self.db.commit()
+        return user
         
     async def notify_analysis_completed(self, analysis_id: str):
         for q in subscribers:
@@ -166,3 +233,89 @@ class UserService:
         query = select(Analysis).filter(Analysis.analysis_id == analysis_id)
         result = await self.db.execute(query)
         return result.scalars().first()
+
+    async def authenticate_user(self, email: str, password: str):
+        """
+        Аутентификация пользователя
+        
+        Args:
+            email: Email пользователя
+            password: Пароль пользователя
+            
+        Returns:
+            User: Объект пользователя если аутентификация успешна, None в противном случае
+        """
+        user = await self.get_user_by_email(email)
+        if not user:
+            return None
+        
+        if not verify_password(password, user.hashed_password):
+            return None
+        
+        return user
+
+    async def get_by_email(self, email: str):
+        """
+        Получение пользователя по email
+        
+        Args:
+            email: Email пользователя
+            
+        Returns:
+            User: Объект пользователя или None
+        """
+        query = select(Users).where(Users.email == email.lower())
+        result = await self.db.execute(query)
+        return result.scalar_one_or_none()
+
+    async def get_login_attempts(self, email: str) -> int:
+        """
+        Получение количества неудачных попыток входа для пользователя
+        
+        Args:
+            email: Email пользователя
+            
+        Returns:
+            int: Количество неудачных попыток входа
+        """
+        user = await self.get_by_email(email)
+        if not user:
+            return 0
+        
+        return user.login_attempts or 0
+
+    async def increment_login_attempts(self, email: str):
+        """
+        Увеличение счетчика неудачных попыток входа
+        
+        Args:
+            email: Email пользователя
+        """
+        user = await self.get_by_email(email)
+        if not user:
+            return
+        
+        # Увеличиваем счетчик на 1
+        user.login_attempts = (user.login_attempts or 0) + 1
+        
+        # Сохраняем изменения
+        self.db.add(user)
+        await self.db.commit()
+
+    async def reset_login_attempts(self, email: str):
+        """
+        Сброс счетчика неудачных попыток входа
+        
+        Args:
+            email: Email пользователя
+        """
+        user = await self.get_by_email(email)
+        if not user:
+            return
+        
+        # Сбрасываем счетчик
+        user.login_attempts = 0
+        
+        # Сохраняем изменения
+        self.db.add(user)
+        await self.db.commit()

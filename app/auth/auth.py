@@ -32,9 +32,6 @@ def uuid_by_token(token: str):
     uuid = payload.get("sub")
     return uuid
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
 def generate_code():
     return ''.join(choices(string.digits, k=6))
 

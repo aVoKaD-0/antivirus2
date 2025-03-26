@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy.orm import relationship
 from migrations.database.db.schemas import Base
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, String, VARCHAR, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, String, VARCHAR, Boolean, ForeignKey, DateTime, Integer
 from datetime import datetime
 
 class Users(Base):
@@ -16,5 +16,6 @@ class Users(Base):
     refresh_token = Column(String, nullable=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     expires_at = Column(DateTime, nullable=True)
+    login_attempts = Column(Integer, default=0)
 
     analyses = relationship("Analysis", back_populates="user", cascade="all, delete-orphan")

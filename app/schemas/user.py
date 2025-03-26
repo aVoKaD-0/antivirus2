@@ -1,5 +1,6 @@
 from pydantic import EmailStr
 from pydantic import BaseModel
+from typing import Optional
 
 class SingUpRequest(BaseModel):
     email: str
@@ -39,6 +40,26 @@ class EmailConfirmation(BaseModel):
 class ResetPasswordRequest(BaseModel):
     password: str
     email: str = None
+    old_password: str = None
 
 class ResetPasswordResponse(BaseModel):
     status: bool
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+    captcha_id: Optional[str] = None
+    captcha_text: Optional[str] = None
+
+class UserRegistration(BaseModel):
+    email: str
+    password: str
+    captcha_id: str
+    captcha_text: str
+
+class UserPasswordReset(BaseModel):
+    email: str
+    password: str
+    captcha_id: str
+    captcha_text: str
+    old_password: Optional[str] = None

@@ -193,3 +193,61 @@
 2025-03-26 00:11:48.390 | INFO     | app.utils.logging:log:20 - connect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
 2025-03-26 00:11:48.791 | INFO     | app.utils.logging:log:20 - disconnect websocket 93a1519c-58a2-4d0a-a1aa-351e97beb1b0, 192.168.31.153
 2025-03-26 00:11:51.377 | INFO     | app.utils.logging:log:20 - Конвертация завершена для анализа 93a1519c-58a2-4d0a-a1aa-351e97beb1b0
+2025-03-26 00:19:35.343 | INFO     | app.utils.logging:log:20 - Файл загружен и анализ запущен. ID анализа: 866ce3b5-ee8b-4d20-9f6c-43918d416e9e
+2025-03-26 00:19:54.206 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:20:05.026 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:20:10.153 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:20:11.493 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:20:17.387 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:20:19.958 | INFO     | app.utils.logging:log:20 - Конвертация ETL в CSV для анализа 866ce3b5-ee8b-4d20-9f6c-43918d416e9e...
+2025-03-26 00:20:19.972 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:20:36.142 | INFO     | app.utils.logging:log:20 - Конвертация ETL в JSON для анализа 866ce3b5-ee8b-4d20-9f6c-43918d416e9e...
+2025-03-26 00:21:24.493 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:24.497 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:25.062 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:31.078 | INFO     | app.utils.logging:log:20 - Конвертация завершена для анализа 866ce3b5-ee8b-4d20-9f6c-43918d416e9e
+2025-03-26 00:21:35.172 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:35.431 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:42.513 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:42.706 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:51.453 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:51.739 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:59.709 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:21:59.863 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:22:26.663 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:22:26.854 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:22:51.192 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:22:51.346 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:18.682 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:18.951 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:27.169 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:27.358 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:34.474 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:34.655 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:42.927 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:43.108 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:49.512 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:23:49.743 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:11.645 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:11.865 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:18.652 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:18.866 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:26.277 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:26.496 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:32.639 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:32.848 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:44.239 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:44.503 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:49.298 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:24:49.517 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:25:00.674 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:25:00.890 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:25:05.128 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:25:05.382 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:25:12.054 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:25:12.262 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:28:42.275 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:29:54.370 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:29:57.047 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:29:57.257 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 00:31:53.908 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153

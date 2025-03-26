@@ -9,30 +9,35 @@ document.querySelector('#registerForm form').addEventListener('submit', async fu
     try {
         const password = document.getElementById('password').value;
         const message = document.getElementById('message');
-        const loading = document.querySelector('.loading');
-        flag = 0;
+        const captchaText = document.getElementById('captchaText').value;
+        let flag = 0;
         
-        if (!password) {
+        if (!password || !captchaText) {
             message.textContent = 'Пожалуйста, заполните все поля.';
+            message.style.color = 'red';
             flag = 1;
         }
         if (password.length < 8) {
             message.textContent = 'Длина пароля должна быть больше 8 символов.';
+            message.style.color = 'red';
             flag = 1;
         }
         if (!/[A-Za-z0-9]/.test(password) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
             message.textContent = 'Пароль должен содержать прописные, заглавные буквы, цифры и специальные символы.';
+            message.style.color = 'red';
             flag = 1;
         }
-        if (flag == 1) {
-            message.textContent = '';
-            message.style.color = 'red';
-            loading.style.display = 'block';
-            document.getElementById('resetButton').disabled = true;
-            flag = 1;
+        
+        if (flag === 1) {
+            document.getElementById('loadingIcon').style.display = 'none';
+            return;
         }
 
-        const response = await fetch('/users/register', {
+        // Добавляем данные CAPTCHA
+        data.captcha_id = document.getElementById('registerCaptchaId').value;
+        data.captcha_text = captchaText;
+
+        const response = await fetch('/users/registration', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,19 +45,26 @@ document.querySelector('#registerForm form').addEventListener('submit', async fu
             body: JSON.stringify(data)
         });
 
-        console.log(response);
+        const responseData = await response.json();
 
         if (response.ok) {
             console.log('Регистрация успешна');
-            window.location.href = '/users/confirm-email';
+            message.textContent = responseData.message || 'Регистрация успешна. Проверьте вашу почту для подтверждения.';
+            message.style.color = 'green';
+            this.reset();
+            refreshCaptcha('register'); // Обновляем капчу после успешной регистрации
         } else {
             console.log('Ошибка при регистрации');
-            const error = await response.json();
-            alert('Ошибка: ' + error.detail);
+            message.textContent = responseData.detail || 'Ошибка при регистрации';
+            message.style.color = 'red';
+            refreshCaptcha('register'); // Обновляем капчу после ошибки
         }
     } catch (error) {
         console.error('Ошибка:', error);
-        alert('Произошла ошибка при отправке данных');
+        const message = document.getElementById('message');
+        message.textContent = 'Произошла ошибка при отправке данных';
+        message.style.color = 'red';
+        refreshCaptcha('register'); // Обновляем капчу после ошибки
     } finally {
         document.getElementById('loadingIcon').style.display = 'none';
     }
@@ -67,6 +79,14 @@ document.querySelector('#loginForm form').addEventListener('submit', async funct
     document.getElementById('loadingIcon').style.display = 'block';
 
     try {
+        // Проверяем, показывается ли CAPTCHA для входа
+        const loginCaptchaContainer = document.getElementById('loginCaptchaContainer');
+        if (loginCaptchaContainer.style.display !== 'none') {
+            // Если CAPTCHA показывается, добавляем её данные в запрос
+            data.captcha_id = document.getElementById('loginCaptchaId').value;
+            data.captcha_text = document.getElementById('loginCaptchaText').value;
+        }
+
         const response = await fetch('/users/login', {
             method: 'POST',
             headers: {
@@ -79,6 +99,15 @@ document.querySelector('#loginForm form').addEventListener('submit', async funct
             window.location.href = '/analysis';
         } else {
             const error = await response.json();
+            
+            // Если требуется CAPTCHA для следующей попытки
+            if (error.require_captcha) {
+                // Показываем блок CAPTCHA
+                loginCaptchaContainer.style.display = 'block';
+                // Загружаем новую CAPTCHA
+                refreshCaptcha('login');
+            }
+            
             alert('Ошибка: ' + error.detail);
         }
     } catch (error) {
@@ -98,12 +127,16 @@ document.getElementById('registerTab').addEventListener('click', function() {
     document.getElementById('registerForm').style.display = 'block';
     document.getElementById('loginForm').style.display = 'none';
     changeTitle('Регистрация');
+    refreshCaptcha('register');
 });
 
 document.getElementById('loginTab').addEventListener('click', function() {
     document.getElementById('registerForm').style.display = 'none';
     document.getElementById('loginForm').style.display = 'block';
     changeTitle('Вход');
+    if (document.getElementById('loginCaptchaContainer').style.display !== 'none') {
+        refreshCaptcha('login');
+    }
 });
 
 function togglePassword(fieldId, button) {
@@ -116,3 +149,49 @@ function togglePassword(fieldId, button) {
         button.textContent = "👁"; // Изменяем иконку на открытый глаз
     }
 }
+
+// Функция для получения и отображения новой CAPTCHA
+async function refreshCaptcha(formType) {
+    try {
+        const response = await fetch('/users/captcha');
+        if (!response.ok) {
+            throw new Error('Ошибка при получении CAPTCHA');
+        }
+        
+        const data = await response.json();
+        
+        if (formType === 'register') {
+            document.getElementById('registerCaptchaImage').src = data.image;
+            document.getElementById('registerCaptchaId').value = data.captcha_id;
+        } else if (formType === 'login') {
+            document.getElementById('loginCaptchaImage').src = data.image;
+            document.getElementById('loginCaptchaId').value = data.captcha_id;
+        }
+    } catch (error) {
+        console.error('Ошибка при обновлении CAPTCHA:', error);
+    }
+}
+
+// Загрузка CAPTCHA при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    // Загружаем CAPTCHA для формы регистрации
+    refreshCaptcha('register');
+    
+    // Изменяем обработчики вкладок, чтобы загружать CAPTCHA при переключении
+    document.getElementById('registerTab').addEventListener('click', function() {
+        document.getElementById('registerForm').style.display = 'block';
+        document.getElementById('loginForm').style.display = 'none';
+        changeTitle('Регистрация');
+        refreshCaptcha('register');
+    });
+
+    document.getElementById('loginTab').addEventListener('click', function() {
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+        changeTitle('Вход');
+        // Загружаем CAPTCHA для формы входа только если она видима
+        if (document.getElementById('loginCaptchaContainer').style.display !== 'none') {
+            refreshCaptcha('login');
+        }
+    });
+});
