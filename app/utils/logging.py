@@ -1,15 +1,6 @@
-import json
-import os
 import requests
 from loguru import logger
-from app.repositories.file_repository import FileRepository
-from migrations.database.db.models import Results, Analysis
-from sqlalchemy import select
-import uuid
 from app.services.db_service import AnalysisDbService
-# from app.auth.auth import uuid_by_token
-from sqlalchemy.ext import asyncio
-from app.domain.models.database import get_db
 
 class Logger:
     # Добавляем лог в файл только один раз при старте

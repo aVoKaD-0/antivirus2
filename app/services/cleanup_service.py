@@ -1,17 +1,15 @@
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger
 from sqlalchemy import select
-from datetime import datetime, timedelta
-from app.domain.models.database import get_db, AsyncSessionLocal
+from datetime import datetime
 from app.domain.models.user import Users
-from sqlalchemy.ext.asyncio import AsyncSession
+from apscheduler.triggers.interval import IntervalTrigger
+from app.domain.models.database import AsyncSessionLocal
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 class CleanupService:
     def __init__(self):
         self.scheduler = None
 
     async def start(self):
-        """Запускает планировщик"""
         if self.scheduler is None:
             self.scheduler = AsyncIOScheduler()
             self.scheduler.add_job(
@@ -37,7 +35,6 @@ class CleanupService:
             await db.commit()
 
     async def stop(self):
-        """Останавливает планировщик"""
         if self.scheduler:
             self.scheduler.shutdown()
             self.scheduler = None 

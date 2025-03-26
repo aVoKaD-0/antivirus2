@@ -1,6 +1,5 @@
 from typing import AsyncGenerator
 from urllib.parse import quote_plus
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from migrations.database.env import username, password, host, dbname
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker

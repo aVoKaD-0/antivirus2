@@ -251,3 +251,45 @@
 2025-03-26 00:29:57.047 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
 2025-03-26 00:29:57.257 | INFO     | app.utils.logging:log:20 - connect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
 2025-03-26 00:31:53.908 | INFO     | app.utils.logging:log:20 - disconnect websocket 866ce3b5-ee8b-4d20-9f6c-43918d416e9e, 192.168.31.153
+2025-03-26 22:39:32.380 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: 639290b2-a0ce-4a33-8e29-eb8a35168e47
+2025-03-26 22:39:59.687 | INFO     | app.utils.logging:log:11 - connect websocket 639290b2-a0ce-4a33-8e29-eb8a35168e47, 192.168.31.153
+2025-03-26 22:40:46.038 | INFO     | app.utils.logging:log:11 - disconnect websocket 639290b2-a0ce-4a33-8e29-eb8a35168e47, 192.168.31.153
+2025-03-26 22:40:46.170 | INFO     | app.utils.logging:log:11 - connect websocket 639290b2-a0ce-4a33-8e29-eb8a35168e47, 192.168.31.153
+2025-03-26 22:40:49.625 | INFO     | app.utils.logging:log:11 - disconnect websocket 639290b2-a0ce-4a33-8e29-eb8a35168e47, 192.168.31.153
+2025-03-26 22:40:49.749 | INFO     | app.utils.logging:log:11 - connect websocket 639290b2-a0ce-4a33-8e29-eb8a35168e47, 192.168.31.153
+2025-03-26 22:41:13.899 | INFO     | app.utils.logging:log:11 - disconnect websocket 639290b2-a0ce-4a33-8e29-eb8a35168e47, 192.168.31.153
+2025-03-26 22:41:14.052 | INFO     | app.utils.logging:log:11 - connect websocket 639290b2-a0ce-4a33-8e29-eb8a35168e47, 192.168.31.153
+2025-03-26 22:41:18.738 | INFO     | app.utils.logging:log:11 - Определена кодировка файла: utf-8
+2025-03-26 22:41:54.716 | INFO     | app.utils.logging:log:11 - disconnect websocket 639290b2-a0ce-4a33-8e29-eb8a35168e47, 192.168.31.153
+2025-03-26 22:42:04.532 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: 4bfc6292-f2ec-427d-8d67-e512af1ab607
+2025-03-26 22:42:04.556 | INFO     | app.utils.logging:log:11 - Ошибка при анализе: AnalysisService.run_in_executor() got an unexpected keyword argument 'check'
+2025-03-26 22:42:04.798 | INFO     | app.utils.logging:log:11 - connect websocket 4bfc6292-f2ec-427d-8d67-e512af1ab607, 192.168.31.153
+2025-03-26 22:42:06.325 | INFO     | app.utils.logging:log:11 - disconnect websocket 4bfc6292-f2ec-427d-8d67-e512af1ab607, 192.168.31.153
+2025-03-26 22:42:06.422 | INFO     | app.utils.logging:log:11 - connect websocket 4bfc6292-f2ec-427d-8d67-e512af1ab607, 192.168.31.153
+2025-03-26 22:42:25.640 | INFO     | app.utils.logging:log:11 - disconnect websocket 4bfc6292-f2ec-427d-8d67-e512af1ab607, 192.168.31.153
+2025-03-26 22:43:14.695 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: 59526bd9-688b-419a-9148-05a03bb6907d
+2025-03-26 22:43:14.716 | INFO     | app.utils.logging:log:11 - Ошибка при анализе: AnalysisService.run_in_executor() got an unexpected keyword argument 'check'
+2025-03-26 22:43:15.284 | INFO     | app.utils.logging:log:11 - connect websocket 59526bd9-688b-419a-9148-05a03bb6907d, 192.168.31.153
+2025-03-26 22:43:16.999 | INFO     | app.utils.logging:log:11 - disconnect websocket 59526bd9-688b-419a-9148-05a03bb6907d, 192.168.31.153
+2025-03-26 22:43:17.124 | INFO     | app.utils.logging:log:11 - connect websocket 59526bd9-688b-419a-9148-05a03bb6907d, 192.168.31.153
+2025-03-26 22:43:22.789 | INFO     | app.utils.logging:log:11 - Определена кодировка файла: utf-8
+2025-03-26 22:43:25.445 | INFO     | app.utils.logging:log:11 - disconnect websocket 59526bd9-688b-419a-9148-05a03bb6907d, 192.168.31.153
+2025-03-26 22:43:54.731 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: be6634a9-4b1e-4eaa-82ce-a2c3aac459bb
+2025-03-26 22:43:54.757 | INFO     | app.utils.logging:log:11 - Ошибка при анализе: AnalysisService.run_in_executor() got an unexpected keyword argument 'check'
+2025-03-26 22:43:55.139 | INFO     | app.utils.logging:log:11 - connect websocket be6634a9-4b1e-4eaa-82ce-a2c3aac459bb, 192.168.31.153
+2025-03-26 22:43:56.750 | INFO     | app.utils.logging:log:11 - disconnect websocket be6634a9-4b1e-4eaa-82ce-a2c3aac459bb, 192.168.31.153
+2025-03-26 22:43:56.867 | INFO     | app.utils.logging:log:11 - connect websocket be6634a9-4b1e-4eaa-82ce-a2c3aac459bb, 192.168.31.153
+2025-03-26 22:44:05.336 | INFO     | app.utils.logging:log:11 - disconnect websocket be6634a9-4b1e-4eaa-82ce-a2c3aac459bb, 192.168.31.153
+2025-03-26 22:45:05.949 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: 03cce205-b5e5-4121-9244-72b19ac3d4f3
+2025-03-26 22:45:21.868 | INFO     | app.utils.logging:log:11 - connect websocket 03cce205-b5e5-4121-9244-72b19ac3d4f3, 192.168.31.153
+2025-03-26 22:50:01.054 | INFO     | app.utils.logging:log:11 - disconnect websocket 03cce205-b5e5-4121-9244-72b19ac3d4f3, 192.168.31.153
+2025-03-26 22:50:01.259 | INFO     | app.utils.logging:log:11 - connect websocket 03cce205-b5e5-4121-9244-72b19ac3d4f3, 192.168.31.153
+2025-03-26 22:51:36.902 | INFO     | app.utils.logging:log:11 - Определена кодировка файла: utf-16
+2025-03-26 22:53:56.392 | INFO     | app.utils.logging:log:11 - disconnect websocket 03cce205-b5e5-4121-9244-72b19ac3d4f3, 192.168.31.153
+2025-03-26 22:54:07.984 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: 7e449861-20bd-4ec1-b40a-b02a55b15a8e
+2025-03-26 22:54:08.171 | INFO     | app.utils.logging:log:11 - connect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153
+2025-03-26 22:54:27.994 | INFO     | app.utils.logging:log:11 - disconnect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153
+2025-03-26 22:54:28.097 | INFO     | app.utils.logging:log:11 - connect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153
+2025-03-26 23:00:22.369 | INFO     | app.utils.logging:log:11 - disconnect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153
+2025-03-26 23:00:22.501 | INFO     | app.utils.logging:log:11 - connect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153
+2025-03-26 23:11:01.737 | INFO     | app.utils.logging:log:11 - disconnect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153

@@ -36,7 +36,7 @@ CMD ["powershell", "-command", "Start-Process -FilePath 'C:\\\\sandbox\\\\{self.
 
     async def build_docker(self):
         await Logger.analysis_log("Сборка Docker-образа...", self.analysis_id)
-        subprocess.run(["powershell", "-command", f"docker build -t analysis_{self.analysis_id} -f {docker}\\analysis\\{self.analysis_id}\\Dockerfile {docker}\\analysis\\{self.analysis_id}\\"], check=True)
+        await self.run_in_executor(["powershell", "-command", f"docker build -t analysis_{self.analysis_id} -f {docker}\\analysis\\{self.analysis_id}\\Dockerfile {docker}\\analysis\\{self.analysis_id}\\"])
 
     async def run_in_executor(self, command):
         loop = asyncio.get_event_loop()

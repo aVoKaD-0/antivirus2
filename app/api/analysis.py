@@ -1,6 +1,8 @@
+import os
 import json
 import uuid
 import asyncio
+import subprocess
 from app.utils.logging import Logger
 from app.auth.auth import uuid_by_token
 from fastapi.staticfiles import StaticFiles
@@ -11,14 +13,12 @@ from app.utils.websocket_manager import manager
 from app.utils.sse_operations import subscribers
 from sse_starlette.sse import EventSourceResponse
 from app.services.user_service import UserService
+from concurrent.futures import ThreadPoolExecutor
 from app.utils.file_operations import FileOperations
 from app.services.analysis_service import AnalysisService
+from app.infrastructure.repositories.analysis import docker
 from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse, FileResponse
 from fastapi import APIRouter, UploadFile, File, Request, HTTPException, Depends, WebSocket, WebSocketDisconnect
-import os
-from app.infrastructure.repositories.analysis import docker
-from concurrent.futures import ThreadPoolExecutor
-import subprocess
 
 router = APIRouter(prefix="/analysis", tags=["analysis"])
 
@@ -277,14 +277,6 @@ async def get_etl_json(analysis_id: str, db: AsyncSession = Depends(get_db)):
 
 @router.get("/etl-chunk/{analysis_id}")
 async def get_etl_chunk(analysis_id: str, offset: int = 0, limit: int = 200):
-    """
-    Получение части ETL результатов по чанкам
-    
-    Args:
-        analysis_id: ID анализа
-        offset: Начальная позиция
-        limit: Количество строк
-    """
     try:
         json_file_path = f"{docker}\\analysis\\{analysis_id}\\trace.json"
         
@@ -295,32 +287,23 @@ async def get_etl_chunk(analysis_id: str, offset: int = 0, limit: int = 200):
             )
             
         try:
-            # Определяем кодировку файла
             with open(json_file_path, 'rb') as f:
                 raw_data = f.read()
-                
-                # Проверяем BOM (Byte Order Mark)
-                if raw_data.startswith(b'\xef\xbb\xbf'):  # UTF-8 BOM
+                if raw_data.startswith(b'\xef\xbb\xbf'): 
                     encoding = 'utf-8-sig'
-                elif raw_data.startswith(b'\xff\xfe') or raw_data.startswith(b'\xfe\xff'):  # UTF-16 BOM
+                elif raw_data.startswith(b'\xff\xfe') or raw_data.startswith(b'\xfe\xff'):
                     encoding = 'utf-16'
                 else:
                     encoding = 'utf-8'
             
-            # Читаем файл построчно
             with open(json_file_path, 'r', encoding=encoding, errors='replace') as f:
-                # Подсчитываем общее количество строк
                 total_lines = sum(1 for _ in f)
-                
-                # Возвращаемся в начало файла
                 f.seek(0)
                 
-                # Перемещаемся к нужной позиции
                 for _ in range(offset):
                     if f.readline() == '':
                         break
                 
-                # Читаем нужное количество строк
                 lines = []
                 for _ in range(limit):
                     line = f.readline()
@@ -351,12 +334,6 @@ async def get_etl_chunk(analysis_id: str, offset: int = 0, limit: int = 200):
 
 @router.get("/download-json/{analysis_id}")
 async def download_json(analysis_id: str):
-    """
-    Скачивание полного JSON файла с ETL результатами
-    
-    Args:
-        analysis_id: ID анализа
-    """
     try:
         json_file_path = f"{docker}\\analysis\\{analysis_id}\\trace.json"
         
@@ -380,12 +357,6 @@ async def download_json(analysis_id: str):
 
 @router.post("/convert-etl/{analysis_id}")
 async def convert_etl(analysis_id: str):
-    """
-    Асинхронно запускает процесс конвертации ETL в JSON
-    
-    Args:
-        analysis_id: ID анализа
-    """
     try:
         etl_file = f"{docker}\\analysis\\{analysis_id}\\trace.etl"
         json_file = f"{docker}\\analysis\\{analysis_id}\\trace.json"

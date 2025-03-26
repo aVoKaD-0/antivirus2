@@ -1,6 +1,6 @@
 from sqlalchemy import select
-from app.domain.models.database import AsyncSessionLocal
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.domain.models.database import AsyncSessionLocal
 from migrations.database.db.models import Results, Analysis
 
 class AnalysisDbService:

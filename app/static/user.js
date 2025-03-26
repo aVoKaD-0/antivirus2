@@ -53,6 +53,7 @@ document.querySelector('#registerForm form').addEventListener('submit', async fu
             message.style.color = 'green';
             this.reset();
             refreshCaptcha('register'); // Обновляем капчу после успешной регистрации
+            window.location.href = '/users/confirm-email';
         } else {
             console.log('Ошибка при регистрации');
             message.textContent = responseData.detail || 'Ошибка при регистрации';
