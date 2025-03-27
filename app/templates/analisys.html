@@ -53,7 +53,7 @@
         </div>
 
         <!-- Зона загрузки файла -->
-        <div class="upload-section">
+        <div class="upload-section" {% if analysis_id %}style="display: none;"{% else %}style="display: block;"{% endif %}>
             <div id="dropZone" class="drop-zone">
                 <div class="drop-zone-content">
                     <img src="/static/upload-icon.svg" alt="Upload" class="upload-icon mb-3">

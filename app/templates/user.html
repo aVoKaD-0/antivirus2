@@ -37,6 +37,27 @@
     .captcha-container {
         margin-bottom: 20px;
     }
+    
+    .captcha-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 5px;
+        font-weight: 500;
+    }
+    
+    .message {
+        margin-top: 15px;
+        padding: 8px;
+        border-radius: 4px;
+    }
+    
+    .message.error {
+        color: #dc3545;
+    }
+    
+    .message.success {
+        color: #198754;
+    }
 </style>
 <body>
     <div class="container mt-4">
@@ -72,6 +93,7 @@
                         <img id="registerCaptchaImage" class="captcha-image" src="" alt="CAPTCHA">
                         <input type="hidden" id="registerCaptchaId" name="captchaId">
                     </div>
+                    <div id="registerCaptchaError" class="captcha-error" style="display: none;">Неверный код с картинки. Попробуйте еще раз.</div>
                 </div>
                 <button type="submit" class="btn btn-success">Зарегистрироваться</button>
                 <div class="message" id="message"></div>
@@ -96,13 +118,14 @@
                 <div class="mb-3 captcha-container" id="loginCaptchaContainer">
                     <label for="loginCaptchaText" class="form-label">Код с картинки</label>
                     <div class="d-flex">
-                        <input type="text" class="form-control me-2" id="loginCaptchaText" name="captchaText">
+                        <input type="text" class="form-control me-2" id="loginCaptchaText" name="captchaText" required>
                         <button type="button" class="btn btn-outline-secondary refresh-captcha" onclick="refreshCaptcha('login')">🔄</button>
                     </div>
                     <div class="mt-2">
                         <img id="loginCaptchaImage" class="captcha-image" src="" alt="CAPTCHA">
                         <input type="hidden" id="loginCaptchaId" name="captchaId">
                     </div>
+                    <div id="loginCaptchaError" class="captcha-error" style="display: none;">Неверный код с картинки. Попробуйте еще раз.</div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <button type="submit" class="btn btn-success">Войти</button>

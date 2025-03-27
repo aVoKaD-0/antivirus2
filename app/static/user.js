@@ -5,6 +5,9 @@ document.querySelector('#registerForm form').addEventListener('submit', async fu
     const data = Object.fromEntries(formData.entries());
 
     document.getElementById('loadingIcon').style.display = 'block';
+    
+    // Скрываем предыдущие сообщения об ошибках CAPTCHA
+    document.getElementById('registerCaptchaError').style.display = 'none';
 
     try {
         const password = document.getElementById('password').value;
@@ -55,10 +58,25 @@ document.querySelector('#registerForm form').addEventListener('submit', async fu
             refreshCaptcha('register'); // Обновляем капчу после успешной регистрации
             window.location.href = '/users/confirm-email';
         } else {
-            console.log('Ошибка при регистрации');
-            message.textContent = responseData.detail || 'Ошибка при регистрации';
-            message.style.color = 'red';
-            refreshCaptcha('register'); // Обновляем капчу после ошибки
+            console.log('Ошибка при регистрации:', responseData);
+            
+            // Проверяем, связана ли ошибка с CAPTCHA
+            if (responseData.detail && responseData.detail.includes('Неверный код с картинки')) {
+                // Показываем ошибку CAPTCHA прямо под полем
+                const captchaError = document.getElementById('registerCaptchaError');
+                captchaError.style.display = 'block';
+                
+                // Очищаем поле ввода CAPTCHA
+                document.getElementById('captchaText').value = '';
+                
+                // Обновляем изображение CAPTCHA
+                refreshCaptcha('register');
+            } else {
+                // Обычная ошибка - показываем общее сообщение
+                message.textContent = responseData.detail || 'Ошибка при регистрации';
+                message.style.color = 'red';
+                refreshCaptcha('register'); // Обновляем капчу после ошибки
+            }
         }
     } catch (error) {
         console.error('Ошибка:', error);
@@ -78,6 +96,9 @@ document.querySelector('#loginForm form').addEventListener('submit', async funct
     const data = Object.fromEntries(formData.entries());
 
     document.getElementById('loadingIcon').style.display = 'block';
+    
+    // Скрываем предыдущие сообщения об ошибках CAPTCHA
+    document.getElementById('loginCaptchaError').style.display = 'none';
 
     try {
         // Проверяем, показывается ли CAPTCHA для входа
@@ -109,7 +130,21 @@ document.querySelector('#loginForm form').addEventListener('submit', async funct
                 refreshCaptcha('login');
             }
             
-            alert('Ошибка: ' + error.detail);
+            // Проверяем, связана ли ошибка с CAPTCHA
+            if (error.detail && error.detail.includes('Неверный код с картинки')) {
+                // Показываем ошибку CAPTCHA прямо под полем
+                const captchaError = document.getElementById('loginCaptchaError');
+                captchaError.style.display = 'block';
+                
+                // Очищаем поле ввода CAPTCHA
+                document.getElementById('loginCaptchaText').value = '';
+                
+                // Обновляем изображение CAPTCHA
+                refreshCaptcha('login');
+            } else {
+                // Обычная ошибка - показываем в alert
+                alert('Ошибка: ' + error.detail);
+            }
         }
     } catch (error) {
         console.error('Ошибка:', error);

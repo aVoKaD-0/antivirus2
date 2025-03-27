@@ -2,8 +2,8 @@ import os
 
 
 hyper = "D:\\programming\\GIt\\gitlab\\antivirus\\Hyper-v"
-docker ="D:\\programming\\GIt\\gitlab\\antivirus\\dockerer"
-docker2 = "D:\\\\programming\\\\GIt\\\\gitlab\\\\antivirus\\\\dockerer"
+docker ="D:\\programming\\GIt\\gitlab\\antivirus2\\dockerer"
+docker2 = "D:\\\\programming\\\\GIt\\\\gitlab\\\\antivirus2\\\\dockerer"
 
 os.path.join(docker, "files")
 os.path.join(docker, "analysis")

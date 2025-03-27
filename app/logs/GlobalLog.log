@@ -293,3 +293,32 @@
 2025-03-26 23:00:22.369 | INFO     | app.utils.logging:log:11 - disconnect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153
 2025-03-26 23:00:22.501 | INFO     | app.utils.logging:log:11 - connect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153
 2025-03-26 23:11:01.737 | INFO     | app.utils.logging:log:11 - disconnect websocket 7e449861-20bd-4ec1-b40a-b02a55b15a8e, 192.168.31.153
+2025-03-27 11:32:18.426 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: e87c5a7f-b881-459e-9299-1c2b187a99b3
+2025-03-27 11:32:18.673 | INFO     | app.utils.logging:log:11 - connect websocket e87c5a7f-b881-459e-9299-1c2b187a99b3, 192.168.31.153
+2025-03-27 13:06:20.521 | INFO     | app.utils.logging:log:11 - connect websocket e87c5a7f-b881-459e-9299-1c2b187a99b3, 192.168.31.153
+2025-03-27 13:06:23.538 | INFO     | app.utils.logging:log:11 - disconnect websocket e87c5a7f-b881-459e-9299-1c2b187a99b3, 192.168.31.153
+2025-03-27 13:06:28.344 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: d286a19a-f4a6-4745-aab5-28731e755b48
+2025-03-27 13:06:28.488 | INFO     | app.utils.logging:log:11 - connect websocket d286a19a-f4a6-4745-aab5-28731e755b48, 192.168.31.153
+2025-03-27 13:07:29.991 | INFO     | app.utils.logging:log:11 - disconnect websocket d286a19a-f4a6-4745-aab5-28731e755b48, 192.168.31.153
+2025-03-27 13:07:30.227 | INFO     | app.utils.logging:log:11 - connect websocket d286a19a-f4a6-4745-aab5-28731e755b48, 192.168.31.153
+2025-03-27 13:08:07.485 | INFO     | app.utils.logging:log:11 - disconnect websocket d286a19a-f4a6-4745-aab5-28731e755b48, 192.168.31.153
+2025-03-27 13:08:07.656 | INFO     | app.utils.logging:log:11 - connect websocket d286a19a-f4a6-4745-aab5-28731e755b48, 192.168.31.153
+2025-03-27 13:08:17.348 | INFO     | app.utils.logging:log:11 - Определена кодировка файла: utf-8
+2025-03-27 13:08:32.781 | INFO     | app.utils.logging:log:11 - disconnect websocket d286a19a-f4a6-4745-aab5-28731e755b48, 192.168.31.153
+2025-03-27 13:09:20.745 | INFO     | app.utils.logging:log:11 - Файл загружен и анализ запущен. ID анализа: c6de8f87-f999-4cc1-a259-417e1b466e12
+2025-03-27 13:09:20.900 | INFO     | app.utils.logging:log:11 - connect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:10:40.468 | INFO     | app.utils.logging:log:11 - disconnect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:10:40.598 | INFO     | app.utils.logging:log:11 - connect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:10:42.411 | INFO     | app.utils.logging:log:11 - disconnect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:10:45.562 | INFO     | app.utils.logging:log:11 - connect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:10:48.779 | INFO     | app.utils.logging:log:11 - Конвертация ETL в CSV для анализа c6de8f87-f999-4cc1-a259-417e1b466e12...
+2025-03-27 13:10:48.821 | INFO     | app.utils.logging:log:11 - connect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:10:49.049 | INFO     | app.utils.logging:log:11 - Ошибка при конвертации ETL: Command '['powershell', '-command', 'tracerpt D:\\programming\\GIt\\gitlab\\antivirus2\\dockerer\\analysis\\c6de8f87-f999-4cc1-a259-417e1b466e12\\trace.etl -o D:\\programming\\GIt\\gitlab\\antivirus2\\dockerer\\analysis\\c6de8f87-f999-4cc1-a259-417e1b466e12\\trace.csv -of CSV']' returned non-zero exit status 1.
+2025-03-27 13:10:49.052 | INFO     | app.utils.logging:log:11 - disconnect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:10:52.780 | INFO     | app.utils.logging:log:11 - disconnect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:10:55.431 | INFO     | app.utils.logging:log:11 - connect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:14:29.812 | INFO     | app.utils.logging:log:11 - disconnect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:14:30.008 | INFO     | app.utils.logging:log:11 - connect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153
+2025-03-27 13:14:46.127 | INFO     | app.utils.logging:log:11 - Определена кодировка файла: utf-16
+2025-03-27 13:14:54.829 | INFO     | app.utils.logging:log:11 - Определена кодировка файла: utf-16
+2025-03-27 13:16:09.501 | INFO     | app.utils.logging:log:11 - disconnect websocket c6de8f87-f999-4cc1-a259-417e1b466e12, 192.168.31.153

@@ -118,6 +118,11 @@ async def login(request: Request, response: Response, user_data: UserLogin, db: 
                     status_code=400,
                     content={"detail": "Неверный код с картинки. Пожалуйста, попробуйте еще раз."}
                 )
+        else:
+            return JSONResponse(
+                status_code=400,
+                content={"detail": "Пожалуйста, введите код с картинки."}
+            )
         
         user_service = UserService(db)
         
