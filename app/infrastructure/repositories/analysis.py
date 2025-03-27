@@ -1,8 +1,11 @@
 import os
 
+cwd = os.getcwd().replace('\\', '\\\\')
+print(cwd)
+
 
 hyper = "D:\\programming\\GIt\\gitlab\\antivirus\\Hyper-v"
-docker ="D:\\programming\\GIt\\gitlab\\antivirus2\\dockerer"
+docker = f"{cwd}\\dockerer"
 docker2 = "D:\\\\programming\\\\GIt\\\\gitlab\\\\antivirus2\\\\dockerer"
 
 os.path.join(docker, "files")
